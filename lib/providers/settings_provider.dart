@@ -36,6 +36,11 @@ class SettingsState {
     return colors[colorIndex];
   }
 
+  @override
+  String toString() {
+    return 'SettingsState(locale: $locale, themeMode: $themeMode, seedColor: $seedColor)';
+  }
+
   factory SettingsState.fromProfile() {
     final profile = Global.profile;
     return SettingsState(

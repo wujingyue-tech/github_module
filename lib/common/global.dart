@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/cacheConfig.dart';
 import '../models/profile.dart';
 
 // 提供五套可选主题色
