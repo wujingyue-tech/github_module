@@ -6,11 +6,10 @@
   "tokenLabel": "Personal Access Token",
   "tokenHint": "以 ghp_ 或 github_pat_ 开头",
   "signIn": "登录",
-  "tokenHelp": "如何获取 Token\n1. 打开 github.com/settings/tokens\n2. Generate new token (classic)\n3. 勾选 read:user（读取个人信息）\n4. 生成后粘贴到上方（只显示一次，请保存好）",
+  "tokenHelp": "如何获取 Token\n1. 打开 github.com/settings/tokens\n2. Generate new token (classic)\n3. 勾选 read:user（个人信息）和 repo（仓库列表，含私有仓）\n4. 生成后粘贴到上方（只显示一次，请保存好）",
   "loggedIn": "已登录",
   "signOut": "退出",
   "savedToken": "已保存 Token",
-  "loginSuccessHint": "登录流程已经跑通。\n下一步再做「仓库列表」和「个人信息」。",
   "settings": "设置",
   "language": "语言",
   "languageSystem": "跟随系统",
@@ -35,5 +34,35 @@
   "authErrorInvalidToken": "Token 无效或已过期，请到 GitHub 重新生成",
   "authErrorForbidden": "权限不足，Token 需要至少能读取用户信息（read:user）",
   "authErrorTimeout": "连接超时，请检查网络",
-  "authErrorFailed": "登录失败"
+  "authErrorFailed": "登录失败",
+  "reposTab": "仓库",
+  "profileTab": "我的",
+  "reposTitle": "仓库",
+  "profileTitle": "个人信息",
+  "reposEmpty": "还没有仓库",
+  "repoPrivate": "私有",
+  "repoNoDescription": "暂无描述",
+  "retry": "重试",
+  "publicRepos": "仓库",
+  "privateRepos": "私有",
+  "followers": "关注者",
+  "following": "关注中",
+  "joinedAt": "加入于 {date}",
+  "@joinedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "starCount": "{count} 星",
+  "@starCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "forkCount": "{count} 分支",
+  "@forkCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

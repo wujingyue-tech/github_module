@@ -13,7 +13,7 @@ class Repo {
     required this.owner,
     this.parent,
     required this.private,
-    required this.description,
+    this.description,
     required this.fork,
     this.language,
     required this.forksCount,
@@ -37,7 +37,7 @@ class Repo {
   final User owner;
   final Repo? parent;
   final bool private;
-  final String description;
+  final String? description;
   final bool fork;
   final String? language;
 

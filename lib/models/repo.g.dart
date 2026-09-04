@@ -15,7 +15,7 @@ Repo _$RepoFromJson(Map<String, dynamic> json) => Repo(
       ? null
       : Repo.fromJson(json['parent'] as Map<String, dynamic>),
   private: json['private'] as bool,
-  description: json['description'] as String,
+  description: json['description'] as String?,
   fork: json['fork'] as bool,
   language: json['language'] as String?,
   forksCount: (json['forks_count'] as num).toInt(),

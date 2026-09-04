@@ -137,7 +137,7 @@ abstract class AppLocalizations {
   /// No description provided for @tokenHelp.
   ///
   /// In en, this message translates to:
-  /// **'How to get a token\n1. Open github.com/settings/tokens\n2. Generate new token (classic)\n3. Enable read:user (read profile)\n4. Paste it above (shown only once — save it)'**
+  /// **'How to get a token\n1. Open github.com/settings/tokens\n2. Generate new token (classic)\n3. Enable read:user (profile) and repo (repository list, including private)\n4. Paste it above (shown only once — save it)'**
   String get tokenHelp;
 
   /// No description provided for @loggedIn.
@@ -157,12 +157,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Token saved'**
   String get savedToken;
-
-  /// No description provided for @loginSuccessHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign-in works.\nRepo list and profile come next.'**
-  String get loginSuccessHint;
 
   /// No description provided for @settings.
   ///
@@ -313,6 +307,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign-in failed'**
   String get authErrorFailed;
+
+  /// No description provided for @reposTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Repos'**
+  String get reposTab;
+
+  /// No description provided for @profileTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTab;
+
+  /// No description provided for @reposTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Repositories'**
+  String get reposTitle;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @reposEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No repositories yet'**
+  String get reposEmpty;
+
+  /// No description provided for @repoPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get repoPrivate;
+
+  /// No description provided for @repoNoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'No description'**
+  String get repoNoDescription;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @publicRepos.
+  ///
+  /// In en, this message translates to:
+  /// **'Repos'**
+  String get publicRepos;
+
+  /// No description provided for @privateRepos.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get privateRepos;
+
+  /// No description provided for @followers.
+  ///
+  /// In en, this message translates to:
+  /// **'Followers'**
+  String get followers;
+
+  /// No description provided for @following.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get following;
+
+  /// No description provided for @joinedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined {date}'**
+  String joinedAt(String date);
+
+  /// No description provided for @starCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} stars'**
+  String starCount(int count);
+
+  /// No description provided for @forkCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} forks'**
+  String forkCount(int count);
 }
 
 class _AppLocalizationsDelegate

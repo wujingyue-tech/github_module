@@ -38,16 +38,19 @@ class User {
   final bool? hireable;
   final String? bio;
 
-  @JsonKey(name: 'public_repos')
+  @JsonKey(name: 'public_repos', defaultValue: 0)
   final int publicRepos;
 
+  @JsonKey(defaultValue: 0)
   final int followers;
+
+  @JsonKey(defaultValue: 0)
   final int following;
 
-  @JsonKey(name: 'created_at')
+  @JsonKey(name: 'created_at', defaultValue: '')
   final String createdAt;
 
-  @JsonKey(name: 'updated_at')
+  @JsonKey(name: 'updated_at', defaultValue: '')
   final String updatedAt;
 
   @JsonKey(name: 'total_private_repos', defaultValue: 0)

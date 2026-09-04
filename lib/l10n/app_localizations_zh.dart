@@ -30,7 +30,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tokenHelp =>
-      '如何获取 Token\n1. 打开 github.com/settings/tokens\n2. Generate new token (classic)\n3. 勾选 read:user（读取个人信息）\n4. 生成后粘贴到上方（只显示一次，请保存好）';
+      '如何获取 Token\n1. 打开 github.com/settings/tokens\n2. Generate new token (classic)\n3. 勾选 read:user（个人信息）和 repo（仓库列表，含私有仓）\n4. 生成后粘贴到上方（只显示一次，请保存好）';
 
   @override
   String get loggedIn => '已登录';
@@ -40,9 +40,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get savedToken => '已保存 Token';
-
-  @override
-  String get loginSuccessHint => '登录流程已经跑通。\n下一步再做「仓库列表」和「个人信息」。';
 
   @override
   String get settings => '设置';
@@ -118,4 +115,55 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get authErrorFailed => '登录失败';
+
+  @override
+  String get reposTab => '仓库';
+
+  @override
+  String get profileTab => '我的';
+
+  @override
+  String get reposTitle => '仓库';
+
+  @override
+  String get profileTitle => '个人信息';
+
+  @override
+  String get reposEmpty => '还没有仓库';
+
+  @override
+  String get repoPrivate => '私有';
+
+  @override
+  String get repoNoDescription => '暂无描述';
+
+  @override
+  String get retry => '重试';
+
+  @override
+  String get publicRepos => '仓库';
+
+  @override
+  String get privateRepos => '私有';
+
+  @override
+  String get followers => '关注者';
+
+  @override
+  String get following => '关注中';
+
+  @override
+  String joinedAt(String date) {
+    return '加入于 $date';
+  }
+
+  @override
+  String starCount(int count) {
+    return '$count 星';
+  }
+
+  @override
+  String forkCount(int count) {
+    return '$count 分支';
+  }
 }

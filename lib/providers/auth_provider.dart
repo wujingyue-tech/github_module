@@ -26,6 +26,12 @@ class AuthNotifier extends AsyncNotifier<User?> {
     state = await AsyncValue.guard(() => GitHubApi.login(trimmed));
   }
 
+  Future<void> refreshProfile() async {
+    state = await AsyncValue.guard(
+      () => GitHubApi.fetchCurrentUser(refresh: true),
+    );
+  }
+
   Future<void> logout() async {
     await GitHubApi.logout();
     state = const AsyncData(null);

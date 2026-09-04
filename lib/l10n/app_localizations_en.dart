@@ -30,7 +30,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tokenHelp =>
-      'How to get a token\n1. Open github.com/settings/tokens\n2. Generate new token (classic)\n3. Enable read:user (read profile)\n4. Paste it above (shown only once — save it)';
+      'How to get a token\n1. Open github.com/settings/tokens\n2. Generate new token (classic)\n3. Enable read:user (profile) and repo (repository list, including private)\n4. Paste it above (shown only once — save it)';
 
   @override
   String get loggedIn => 'Signed in';
@@ -40,10 +40,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get savedToken => 'Token saved';
-
-  @override
-  String get loginSuccessHint =>
-      'Sign-in works.\nRepo list and profile come next.';
 
   @override
   String get settings => 'Settings';
@@ -121,4 +117,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authErrorFailed => 'Sign-in failed';
+
+  @override
+  String get reposTab => 'Repos';
+
+  @override
+  String get profileTab => 'Profile';
+
+  @override
+  String get reposTitle => 'Repositories';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get reposEmpty => 'No repositories yet';
+
+  @override
+  String get repoPrivate => 'Private';
+
+  @override
+  String get repoNoDescription => 'No description';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get publicRepos => 'Repos';
+
+  @override
+  String get privateRepos => 'Private';
+
+  @override
+  String get followers => 'Followers';
+
+  @override
+  String get following => 'Following';
+
+  @override
+  String joinedAt(String date) {
+    return 'Joined $date';
+  }
+
+  @override
+  String starCount(int count) {
+    return '$count stars';
+  }
+
+  @override
+  String forkCount(int count) {
+    return '$count forks';
+  }
 }
