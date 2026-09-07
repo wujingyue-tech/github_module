@@ -1,0 +1,78 @@
+import 'dart:async';
+
+import 'package:learn_flutter/core/error/app_exception.dart';
+import 'package:learn_flutter/features/auth/domain/user.dart';
+import 'package:learn_flutter/features/repos/domain/repo.dart';
+import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
+
+const previewOwner = User(
+  login: 'octocat',
+  avatarUrl: 'https://example.com/a.png',
+  type: 'User',
+  publicRepos: 0,
+  followers: 0,
+  following: 0,
+  totalPrivateRepos: 0,
+  ownedPrivateRepos: 0,
+);
+
+Repo sampleRepo(int id) {
+  return Repo(
+    id: id,
+    name: 'repo-$id',
+    fullName: 'octocat/repo-$id',
+    owner: previewOwner,
+    private: false,
+    fork: false,
+    forksCount: 1,
+    stargazersCount: id,
+    defaultBranch: 'main',
+    openIssuesCount: 0,
+    description: 'Preview repo $id',
+    language: 'Dart',
+  );
+}
+
+/// In-memory [RepoRepository] for snapshot preview and notifier tests.
+///
+/// Always implements the domain port. Do not fake Dio or the notifier
+/// when you only need a fixed list / empty / error / hang.
+class FakeRepoRepository implements RepoRepository {
+  const FakeRepoRepository({
+    this.items = const [],
+    this.error,
+    this.hang = false,
+  });
+
+  factory FakeRepoRepository.empty() => const FakeRepoRepository();
+
+  factory FakeRepoRepository.error([AppErrorCode code = AppErrorCode.offline]) {
+    return FakeRepoRepository(error: AppException(code));
+  }
+
+  factory FakeRepoRepository.list({int count = 3}) {
+    return FakeRepoRepository(
+      items: [for (var i = 0; i < count; i++) sampleRepo(i)],
+    );
+  }
+
+  factory FakeRepoRepository.hasMore() {
+    return FakeRepoRepository.list(count: RepoRepository.pageSize);
+  }
+
+  factory FakeRepoRepository.loading() => const FakeRepoRepository(hang: true);
+
+  final List<Repo> items;
+  final Object? error;
+  final bool hang;
+
+  @override
+  Future<List<Repo>> listRepos({
+    required int page,
+    Map<String, String>? headers,
+  }) async {
+    if (hang) return Completer<List<Repo>>().future;
+    if (error != null) throw error!;
+    return items;
+  }
+}

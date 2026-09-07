@@ -105,6 +105,21 @@ ref.read(sessionProvider.notifier).clearAuth()
 
 对照 `test/repo_repository_test.dart` 和 `test/repo_list_provider_test.dart`。
 
+## 8. 预览某一帧 UI
+
+后端或蓝牙还没好、只想看空态 / 错误 / 满页时：假 **domain 端口**，不要假 Dio，也不要假 Notifier。
+
+1. 在该 feature 的 `data/` 写 `FakeXxxRepository`，实现同一个接口。对照 `features/repos/data/fake_repo_repository.dart`。
+2. 在 `lib/app/preview.dart` 加一个 `AppPreview` 枚举值，并在 `previewRepoRepository()`（或以后的同类函数）里返回对应 Fake。`bootstrap()` 负责 `overrideWithValue`。
+3. 把 `appPreview` 改成那个值，**hot restart**（`ProviderContainer` 只在启动时建一次）。
+4. 需要登录的页，先用真登录走进去；预览只替换这一页用到的端口。
+
+Release 不会挂这些 override。看完改回 `AppPreview.off`。
+
+同一份 Fake 给 Notifier 测试用，不要在 `test/` 再写一套只会 `return []` 的类。
+
+多步点击的流程剧本这里不做；那种是按调用次数往下走的 Scripted Fake，和单点不是一层。
+
 ## 落点清单
 
 | 你在写的东西 | 放哪 | 不要做 |
@@ -113,6 +128,7 @@ ref.read(sessionProvider.notifier).clearAuth()
 | JSON、HTTP、本地存储、设备协议 | `data/` | import Notifier |
 | 页面、Notifier | `presentation/` | import 别的 feature 的 `data/` |
 | 组装 client / Repository | `app/di.dart` | 在 Page 里 `XxxRemote()` |
+| 某一帧预览 | `data/fake_*.dart` + `app/preview.dart` | 假 Dio / 假 Notifier 来看空态、错误页 |
 | 超时、主题、通用错误 | `core/` | 把某个业务的 `Issue` 塞进来 |
 
 跨 feature 只走两条路：对方的 **domain 类型**（例如 Issues 用 `User`），或 **`app/di.dart` 里的 provider**。

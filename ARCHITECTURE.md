@@ -6,7 +6,7 @@ This project is a Flutter template using **feature-first** layout and thin domai
 
 ```text
 lib/
-  app/           bootstrap, router, composition root (DI)
+  app/           bootstrap, router, composition root (DI), debug preview
   core/          shared kernel — must not import features
   features/      one folder per business capability
     */domain/    entities and repository interfaces
@@ -50,5 +50,7 @@ core         → (nothing in features)
 ## Configuration
 
 `AppConfig` in `core/network` holds base URL and timeouts. Swap it through `appConfigProvider` for flavors later.
+
+Debug snapshot preview lives in `app/preview.dart`. It overrides domain ports (never Dio or notifiers) so one UI state can be inspected. How to add a case: [ADD_FEATURE.md](ADD_FEATURE.md).
 
 How to add a feature (HTTP, MQTT, or Bluetooth): [ADD_FEATURE.md](ADD_FEATURE.md).
