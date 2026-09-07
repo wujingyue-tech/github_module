@@ -9,7 +9,7 @@ import 'package:learn_flutter/features/session/domain/auth_store.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 
 class _FakeAuthStore implements AuthStore {
-  _FakeAuthStore([this.session = const AuthSession()]);
+  _FakeAuthStore() : session = const AuthSession();
 
   AuthSession session;
 
