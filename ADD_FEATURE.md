@@ -138,7 +138,7 @@ Release 不会挂这些 override。看完改回 `AppPreview.off`。
 | 超时、主题、通用错误、`RequestCancel` | `core/` | 把某个业务的 `Issue` 塞进来 |
 | 取消进行中的请求 | `RequestCancel` + `ref.onDispose` | 把 Dio `CancelToken` 写进 domain；取消后当成失败页 |
 | HTTP 环境 | `AppConfig.resolve()` / `appConfigProvider` | 改 `AppConfig.github` 的地址来指向假后端 |
-| 日志 / 上报 | `AppLog`（`ref.read(appLogProvider)`） | 页面里 `print` / `Talker()` / 把 token 打进日志 |
+| 日志 / 上报 | `AppLog` / `LogDump` | 页面里 `print` / `Talker()` / 把 token 打进日志；用 `dioProvider` 上传 dump |
 
 跨 feature 只走两条路：对方的 **domain 类型**（例如 Issues 用 `User`），或 **`app/di.dart` 里的 provider**。
 

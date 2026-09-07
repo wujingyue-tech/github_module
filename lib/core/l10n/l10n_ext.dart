@@ -28,6 +28,7 @@ String authErrorText(AppLocalizations l10n, Object error) {
       AppErrorCode.offline => l10n.authErrorOffline,
       AppErrorCode.parseFailed => l10n.authErrorParseFailed,
       AppErrorCode.failed => l10n.authErrorFailed,
+      AppErrorCode.logDumpUnavailable => l10n.logDumpUnavailable,
     };
   }
   return l10n.authErrorFailed;

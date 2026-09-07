@@ -48,6 +48,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get debugLogs => '日志';
 
   @override
+  String get uploadLogs => '上报日志';
+
+  @override
+  String uploadLogsSuccess(String id) {
+    return '已上报，编号 $id';
+  }
+
+  @override
+  String get logDumpUnavailable => '未配置日志上报地址（LOG_DUMP_URL）';
+
+  @override
+  String get minimizeLogs => '收起';
+
+  @override
+  String appVersion(String version) {
+    return '版本 $version';
+  }
+
+  @override
   String get language => '语言';
 
   @override

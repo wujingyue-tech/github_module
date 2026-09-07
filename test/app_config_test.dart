@@ -23,6 +23,15 @@ void main() {
     expect(config.baseUrl, 'http://10.0.2.2:8080/');
   });
 
+  test('LOG_DUMP_URL is attached without changing the API host', () {
+    final config = AppConfig.resolve(
+      logDumpUrl: 'https://dumps.example/upload',
+    );
+    expect(config.env, AppEnv.github);
+    expect(config.baseUrl, 'https://api.github.com/');
+    expect(config.logDumpUrl, 'https://dumps.example/upload');
+  });
+
   test('unknown APP_ENV falls back to GitHub', () {
     expect(AppConfig.resolve(envName: 'staging').env, AppEnv.github);
   });

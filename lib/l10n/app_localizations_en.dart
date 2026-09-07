@@ -48,6 +48,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get debugLogs => 'Logs';
 
   @override
+  String get uploadLogs => 'Upload logs';
+
+  @override
+  String uploadLogsSuccess(String id) {
+    return 'Uploaded. Dump id: $id';
+  }
+
+  @override
+  String get logDumpUnavailable =>
+      'Log upload is not configured. Set LOG_DUMP_URL.';
+
+  @override
+  String get minimizeLogs => 'Minimize';
+
+  @override
+  String appVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
   String get language => 'Language';
 
   @override

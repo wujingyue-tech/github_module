@@ -7,6 +7,7 @@ class AppConfig {
     required this.connectTimeout,
     required this.receiveTimeout,
     this.apiVersion = '2022-11-28',
+    this.logDumpUrl = '',
   });
 
   final AppEnv env;
@@ -14,6 +15,10 @@ class AppConfig {
   final Duration connectTimeout;
   final Duration receiveTimeout;
   final String apiVersion;
+
+  /// Absolute URL for diagnostic log upload. Empty means upload is disabled.
+  /// Set with `--dart-define=LOG_DUMP_URL=https://...`.
+  final String logDumpUrl;
 
   static const github = AppConfig(
     env: AppEnv.github,
@@ -37,6 +42,7 @@ class AppConfig {
     Duration? connectTimeout,
     Duration? receiveTimeout,
     String? apiVersion,
+    String? logDumpUrl,
   }) {
     return AppConfig(
       env: env ?? this.env,
@@ -44,6 +50,7 @@ class AppConfig {
       connectTimeout: connectTimeout ?? this.connectTimeout,
       receiveTimeout: receiveTimeout ?? this.receiveTimeout,
       apiVersion: apiVersion ?? this.apiVersion,
+      logDumpUrl: logDumpUrl ?? this.logDumpUrl,
     );
   }
 
@@ -55,12 +62,17 @@ class AppConfig {
       defaultValue: 'github',
     ),
     String baseUrl = const String.fromEnvironment('API_BASE_URL'),
+    String logDumpUrl = const String.fromEnvironment('LOG_DUMP_URL'),
   }) {
     final preset = switch (envName) {
       'sandbox' => sandbox,
       _ => github,
     };
-    if (baseUrl.isEmpty) return preset;
-    return preset.copyWith(baseUrl: baseUrl);
+    var config = preset;
+    if (baseUrl.isNotEmpty) config = config.copyWith(baseUrl: baseUrl);
+    if (logDumpUrl.isNotEmpty) {
+      config = config.copyWith(logDumpUrl: logDumpUrl);
+    }
+    return config;
   }
 }

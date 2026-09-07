@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_flutter/core/app_info.dart';
 import 'package:learn_flutter/core/logging/app_log.dart';
+import 'package:learn_flutter/core/logging/http_log_dump.dart';
+import 'package:learn_flutter/core/logging/log_dump.dart';
 import 'package:learn_flutter/core/logging/talker_app_log.dart';
 import 'package:learn_flutter/core/network/app_config.dart';
 import 'package:learn_flutter/core/network/auth_interceptor.dart';
@@ -19,8 +22,30 @@ import 'package:talker/talker.dart';
 
 final talkerProvider = Provider<Talker>((ref) => Talker());
 
+final appInfoProvider = Provider<AppInfo>((ref) => AppInfo.unset);
+
 final appLogProvider = Provider<AppLog>((ref) {
   return TalkerAppLog(ref.watch(talkerProvider));
+});
+
+/// Dedicated client so uploading a dump is not logged by TalkerDioLogger.
+final logDumpDioProvider = Provider<Dio>((ref) {
+  return Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
+    ),
+  );
+});
+
+final logDumpProvider = Provider<LogDump>((ref) {
+  return HttpLogDump(
+    talker: ref.watch(talkerProvider),
+    dio: ref.watch(logDumpDioProvider),
+    endpoint: ref.watch(appConfigProvider).logDumpUrl,
+    appInfo: ref.watch(appInfoProvider),
+  );
 });
 
 final appConfigProvider = Provider<AppConfig>((ref) => AppConfig.resolve());

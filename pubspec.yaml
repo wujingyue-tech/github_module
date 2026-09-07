@@ -1,7 +1,10 @@
 name: learn_flutter
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.0+1
+# YYYY.MINOR.PATCH+buildNumber — one value for iOS, Android, and the Settings UI.
+# Example: Android Studio Quail 4 is 2026.1.4. Bump PATCH for fixes, MINOR for features,
+# YEAR when the product line rolls. Only +buildNumber must increase for store uploads.
+version: 2026.1.0+1
 
 environment:
   sdk: ^3.13.2
@@ -17,6 +20,7 @@ dependencies:
   flutter_secure_storage: ^10.0.0
   go_router: ^18.0.1
   intl: any
+  package_info_plus: ^10.2.1
   shared_preferences: ^2.5.5
   talker: ^5.1.20
   talker_dio_logger: ^5.1.20

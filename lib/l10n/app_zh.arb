@@ -12,6 +12,21 @@
   "savedToken": "已保存 Token",
   "settings": "设置",
   "debugLogs": "日志",
+  "uploadLogs": "上报日志",
+  "uploadLogsSuccess": "已上报，编号 {id}",
+  "@uploadLogsSuccess": {
+    "placeholders": {
+      "id": { "type": "String" }
+    }
+  },
+  "logDumpUnavailable": "未配置日志上报地址（LOG_DUMP_URL）",
+  "minimizeLogs": "收起",
+  "appVersion": "版本 {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
   "language": "语言",
   "languageSystem": "跟随系统",
   "languageChinese": "中文",

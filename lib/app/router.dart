@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:learn_flutter/app/log_console_provider.dart';
 import 'package:learn_flutter/app/log_viewer_page.dart';
 import 'package:learn_flutter/features/auth/presentation/login_page.dart';
 import 'package:learn_flutter/features/auth/presentation/profile_page.dart';
@@ -12,6 +13,9 @@ import 'package:learn_flutter/features/session/presentation/settings_page.dart';
 class _AuthRefresh extends ChangeNotifier {
   _AuthRefresh(Ref ref) {
     ref.listen(sessionProvider.select((s) => s.isLoggedIn), (_, _) {
+      notifyListeners();
+    });
+    ref.listen(logConsoleProvider.select((s) => s.unlocked), (_, _) {
       notifyListeners();
     });
   }
@@ -29,7 +33,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final loggingIn = path == '/login';
       final inSettings = path == '/settings';
       final inLogs = path == '/logs';
+      final logsUnlocked = ref.read(logConsoleProvider).unlocked;
       final loggedIn = ref.read(sessionProvider).isLoggedIn;
+      if (inLogs && !logsUnlocked) {
+        return loggedIn ? '/repos' : '/login';
+      }
       if (!loggedIn && !loggingIn && !inSettings && !inLogs) return '/login';
       if (loggedIn && (loggingIn || path == '/')) return '/repos';
       return null;
@@ -40,11 +48,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         builder: (context, state) => const SettingsPage(),
       ),
-      if (kDebugMode)
-        GoRoute(
-          path: '/logs',
-          builder: (context, state) => const LogViewerPage(),
-        ),
+      GoRoute(
+        path: '/logs',
+        builder: (context, state) => const LogViewerPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppShell(navigationShell: navigationShell);

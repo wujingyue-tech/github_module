@@ -8,6 +8,7 @@ enum AppErrorCode {
   offline,
   parseFailed,
   failed,
+  logDumpUnavailable,
 }
 
 class AppException implements Exception {

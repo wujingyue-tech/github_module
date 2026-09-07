@@ -12,6 +12,21 @@
   "savedToken": "Token saved",
   "settings": "Settings",
   "debugLogs": "Logs",
+  "uploadLogs": "Upload logs",
+  "uploadLogsSuccess": "Uploaded. Dump id: {id}",
+  "@uploadLogsSuccess": {
+    "placeholders": {
+      "id": { "type": "String" }
+    }
+  },
+  "logDumpUnavailable": "Log upload is not configured. Set LOG_DUMP_URL.",
+  "minimizeLogs": "Minimize",
+  "appVersion": "Version {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
   "language": "Language",
   "languageSystem": "System default",
   "languageChinese": "中文",

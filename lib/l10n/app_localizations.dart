@@ -170,6 +170,36 @@ abstract class AppLocalizations {
   /// **'Logs'**
   String get debugLogs;
 
+  /// No description provided for @uploadLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload logs'**
+  String get uploadLogs;
+
+  /// No description provided for @uploadLogsSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded. Dump id: {id}'**
+  String uploadLogsSuccess(String id);
+
+  /// No description provided for @logDumpUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Log upload is not configured. Set LOG_DUMP_URL.'**
+  String get logDumpUnavailable;
+
+  /// No description provided for @minimizeLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimize'**
+  String get minimizeLogs;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String appVersion(String version);
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:

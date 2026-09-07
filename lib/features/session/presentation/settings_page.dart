@@ -1,7 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/app/hidden_log_unlock.dart';
+import 'package:learn_flutter/app/log_console_provider.dart';
 import 'package:learn_flutter/core/l10n/l10n_ext.dart';
 import 'package:learn_flutter/core/theme/app_themes.dart';
 import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
@@ -98,16 +100,80 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ),
-          if (kDebugMode) ...[
-            const Divider(),
-            ListTile(
-              title: Text(l10n.debugLogs),
-              leading: const Icon(Icons.bug_report_outlined),
-              onTap: () => context.push('/logs'),
+          const Divider(),
+          const _UploadLogsTile(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+            child: Center(
+              child: HiddenLogUnlock(
+                holdDuration: ref.watch(hiddenLogHoldProvider),
+                onUnlocked: () {
+                  ref.read(logConsoleProvider.notifier).unlock();
+                  context.push('/logs');
+                },
+                child: Text(
+                  l10n.appVersion(ref.watch(appInfoProvider).label),
+                  key: const Key('appVersion'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
             ),
-          ],
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _UploadLogsTile extends ConsumerStatefulWidget {
+  const _UploadLogsTile();
+
+  @override
+  ConsumerState<_UploadLogsTile> createState() => _UploadLogsTileState();
+}
+
+class _UploadLogsTileState extends ConsumerState<_UploadLogsTile> {
+  var _uploading = false;
+
+  Future<void> _upload() async {
+    if (_uploading) return;
+    setState(() => _uploading = true);
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final report = await ref.read(logDumpProvider).upload();
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.uploadLogsSuccess(report.id))),
+      );
+    } catch (error, stackTrace) {
+      ref.read(appLogProvider).report(error, stackTrace, 'log dump upload');
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(authErrorText(l10n, error))),
+      );
+    } finally {
+      if (mounted) setState(() => _uploading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return ListTile(
+      leading: const Icon(Icons.cloud_upload_outlined),
+      title: Text(l10n.uploadLogs),
+      enabled: !_uploading,
+      trailing: _uploading
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : null,
+      onTap: _uploading ? null : _upload,
     );
   }
 }

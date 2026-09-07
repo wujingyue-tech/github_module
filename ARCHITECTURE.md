@@ -43,11 +43,12 @@ core         → (nothing in features)
 | `SessionNotifier` / `SettingsNotifier` | Auth vs settings state + restore | Open prefs / Keychain |
 | `dioProvider` | Assemble Dio + interceptors | `ref.watch` session inside interceptors |
 | `AppLog` / `TalkerAppLog` | Console + in-app log history | Pages calling Talker / `print` |
+| `LogDump` / `HttpLogDump` | Export + POST diagnostic dump | Using `dioProvider` (would log the dump) |
 | `DioCacheInterceptor` | Browser-like GET cache from HTTP headers | Custom `refresh` / `noCache` flags or per-call `CacheOptions` |
 
 ## Startup
 
-`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported through `AppLog` and ignored so the app still starts logged-out with default settings. `FlutterError.onError` and `PlatformDispatcher.instance.onError` also go to `AppLog`. Debug builds can open Talker's log screen at `/logs` (Settings).
+`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported through `AppLog` and ignored so the app still starts logged-out with default settings. `FlutterError.onError` and `PlatformDispatcher.instance.onError` also go to `AppLog`. App version comes only from `pubspec.yaml` (`YYYY.MINOR.PATCH+build`, Android Studio style) and is injected via `PackageInfo` at startup; do not duplicate it in Dart, Gradle, or Info.plist. Debug builds show a floating button that opens the full `/logs` page; release builds unlock the same page by double-tapping the version on Settings, holding 10 seconds, then double-tapping again. Upload goes through `LogDump` (not the GitHub Dio) to `LOG_DUMP_URL`.
 
 ## Configuration
 
