@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/app/app.dart';
+import 'package:learn_flutter/app/debug_preview.dart';
+import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
 
@@ -10,7 +13,14 @@ import 'package:learn_flutter/features/session/presentation/settings_provider.da
 /// disposed if restore fails before [runApp].
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final container = ProviderContainer();
+  final container = ProviderContainer(
+    overrides: [
+      if (kDebugMode && debugForceRepoListError)
+        repoRepositoryProvider.overrideWithValue(
+          const ForceErrorRepoRepository(),
+        ),
+    ],
+  );
   try {
     await Future.wait([
       container.read(sessionProvider.notifier).restore(),
