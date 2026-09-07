@@ -32,7 +32,7 @@ void main() {
     expect(state.hasMore, isTrue);
   });
 
-  test('loadMore surfaces errors', () async {
+  test('loadMore keeps items and stores the error on the list state', () async {
     final container = ProviderContainer(
       overrides: [
         repoRepositoryProvider.overrideWithValue(_FailingLoadMoreRepository()),
@@ -43,10 +43,82 @@ void main() {
     await container.read(repoListProvider.future);
     await container.read(repoListProvider.notifier).loadMore();
 
-    expect(container.read(repoListProvider).hasError, isTrue);
+    final value = container.read(repoListProvider);
+    expect(value.hasError, isFalse);
+    final state = value.requireValue;
+    expect(state.items, hasLength(RepoRepository.pageSize));
+    expect(state.hasMore, isTrue);
+    expect((state.loadMoreError! as AppException).code, AppErrorCode.failed);
+  });
+
+  test('loadMore does not auto-retry while the footer error is set', () async {
+    final repo = _CountingFailingLoadMoreRepository();
+    final container = ProviderContainer(
+      overrides: [repoRepositoryProvider.overrideWithValue(repo)],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(repoListProvider.future);
+    await container.read(repoListProvider.notifier).loadMore();
+    await container.read(repoListProvider.notifier).loadMore();
+
+    expect(repo.calls, 2);
     expect(
-      (container.read(repoListProvider).error! as AppException).code,
-      AppErrorCode.failed,
+      container.read(repoListProvider).requireValue.loadMoreError,
+      isNotNull,
     );
   });
+
+  test('retryLoadMore appends the next page after a failure', () async {
+    final container = ProviderContainer(
+      overrides: [
+        repoRepositoryProvider.overrideWithValue(
+          _FailThenSucceedLoadMoreRepository(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(repoListProvider.future);
+    await container.read(repoListProvider.notifier).loadMore();
+    expect(
+      container.read(repoListProvider).requireValue.items,
+      hasLength(RepoRepository.pageSize),
+    );
+
+    await container.read(repoListProvider.notifier).retryLoadMore();
+
+    final state = container.read(repoListProvider).requireValue;
+    expect(state.items, hasLength(RepoRepository.pageSize + 1));
+    expect(state.loadMoreError, isNull);
+    expect(state.hasMore, isFalse);
+  });
+}
+
+class _FailThenSucceedLoadMoreRepository implements RepoRepository {
+  var _page2Calls = 0;
+
+  @override
+  Future<List<Repo>> listRepos({
+    required int page,
+    Map<String, String>? headers,
+  }) async {
+    if (page == 1) return FakeRepoRepository.hasMore().items;
+    _page2Calls++;
+    if (_page2Calls == 1) throw AppException(AppErrorCode.failed);
+    return [sampleRepo(100)];
+  }
+}
+
+class _CountingFailingLoadMoreRepository extends _FailingLoadMoreRepository {
+  var calls = 0;
+
+  @override
+  Future<List<Repo>> listRepos({
+    required int page,
+    Map<String, String>? headers,
+  }) async {
+    calls++;
+    return super.listRepos(page: page, headers: headers);
+  }
 }

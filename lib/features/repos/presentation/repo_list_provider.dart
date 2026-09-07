@@ -8,11 +8,33 @@ class RepoListState {
     required this.items,
     required this.page,
     required this.hasMore,
+    this.loadMoreError,
   });
 
   final List<Repo> items;
   final int page;
   final bool hasMore;
+
+  /// Set when the next page fails. Existing [items] stay on screen.
+  /// Scroll must not auto-retry while this is non-null; call [RepoListNotifier.retryLoadMore].
+  final Object? loadMoreError;
+
+  RepoListState copyWith({
+    List<Repo>? items,
+    int? page,
+    bool? hasMore,
+    Object? loadMoreError,
+    bool clearLoadMoreError = false,
+  }) {
+    return RepoListState(
+      items: items ?? this.items,
+      page: page ?? this.page,
+      hasMore: hasMore ?? this.hasMore,
+      loadMoreError: clearLoadMoreError
+          ? null
+          : (loadMoreError ?? this.loadMoreError),
+    );
+  }
 }
 
 class RepoListNotifier extends AsyncNotifier<RepoListState> {
@@ -43,23 +65,36 @@ class RepoListNotifier extends AsyncNotifier<RepoListState> {
 
   Future<void> loadMore() async {
     final current = state.value;
-    if (current == null || !current.hasMore || _loadingMore) return;
+    if (current == null ||
+        !current.hasMore ||
+        _loadingMore ||
+        current.loadMoreError != null) {
+      return;
+    }
     _loadingMore = true;
     try {
       final nextPage = current.page + 1;
       final more = await _repo.listRepos(page: nextPage);
       state = AsyncData(
-        RepoListState(
+        current.copyWith(
           items: [...current.items, ...more],
           page: nextPage,
           hasMore: more.length >= RepoRepository.pageSize,
+          clearLoadMoreError: true,
         ),
       );
-    } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
+    } catch (error) {
+      state = AsyncData(current.copyWith(loadMoreError: error));
     } finally {
       _loadingMore = false;
     }
+  }
+
+  Future<void> retryLoadMore() async {
+    final current = state.value;
+    if (current?.loadMoreError == null) return;
+    state = AsyncData(current!.copyWith(clearLoadMoreError: true));
+    await loadMore();
   }
 }
 
