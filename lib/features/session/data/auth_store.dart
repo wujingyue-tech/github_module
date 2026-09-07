@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:learn_flutter/features/auth/data/user_dto.dart';
 import 'package:learn_flutter/features/auth/domain/user.dart';
-import 'package:learn_flutter/features/session/data/profile_dto.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,8 +11,6 @@ class AuthStore {
 
   static const userKey = 'auth_user';
   static const tokenKey = 'github_token';
-  static const lastLoginKey = 'auth_last_login';
-  static const legacyProfileKey = 'profile';
 
   final SharedPreferences prefs;
   final FlutterSecureStorage secure;
@@ -26,27 +23,10 @@ class AuthStore {
   }
 
   Future<AuthSession> load() async {
-    final legacy = _legacyProfile();
-
-    var token = await secure.read(key: tokenKey);
-    final legacyToken = legacy?.token;
-    if ((token == null || token.isEmpty) &&
-        legacyToken != null &&
-        legacyToken.isNotEmpty) {
-      token = legacyToken;
-      await secure.write(key: tokenKey, value: token);
-    }
-
-    final user =
-        _userFromRaw(prefs.getString(userKey)) ??
-        (legacy?.user == null
-            ? null
-            : UserDto.fromJson(legacy!.user!).toDomain());
-    final lastLogin = prefs.getString(lastLoginKey) ?? legacy?.lastLogin;
-
-    final session = AuthSession(token: token, user: user, lastLogin: lastLogin);
-    await save(session);
-    return session;
+    return AuthSession(
+      token: await secure.read(key: tokenKey),
+      user: _userFromRaw(prefs.getString(userKey)),
+    );
   }
 
   Future<void> save(AuthSession session) async {
@@ -63,22 +43,6 @@ class AuthStore {
         userKey,
         jsonEncode(UserDto.fromDomain(session.user!).toJson()),
       );
-    }
-
-    if (session.lastLogin == null || session.lastLogin!.isEmpty) {
-      await prefs.remove(lastLoginKey);
-    } else {
-      await prefs.setString(lastLoginKey, session.lastLogin!);
-    }
-  }
-
-  ProfileDto? _legacyProfile() {
-    final raw = prefs.getString(legacyProfileKey);
-    if (raw == null) return null;
-    try {
-      return ProfileDto.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-    } catch (_) {
-      return null;
     }
   }
 

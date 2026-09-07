@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/features/session/data/auth_store.dart';
@@ -15,27 +13,16 @@ void main() {
     FlutterSecureStorage.setMockInitialValues({});
   });
 
-  test('migrates legacy token out of profile json', () async {
-    SharedPreferences.setMockInitialValues({
-      'profile': jsonEncode({
-        'theme': 2,
-        'token': 'legacy-token',
-        'locale': 'zh',
-      }),
-    });
-    FlutterSecureStorage.setMockInitialValues({});
-
+  test('load is empty when nothing is stored', () async {
     final store = AuthStore(
       prefs: await SharedPreferences.getInstance(),
       secure: const FlutterSecureStorage(),
     );
-    final session = await store.load();
 
-    expect(session.token, 'legacy-token');
-    expect(
-      await const FlutterSecureStorage().read(key: 'github_token'),
-      'legacy-token',
-    );
+    final session = await store.load();
+    expect(session.token, isNull);
+    expect(session.user, isNull);
+    expect(session.isLoggedIn, isFalse);
   });
 
   test('save keeps token in secure storage only', () async {

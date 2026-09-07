@@ -15,12 +15,12 @@ class SessionNotifier extends Notifier<AuthSession> {
   }
 
   Future<void> setAuth({required String token, required User user}) async {
-    state = state.copyWith(token: token, user: user, lastLogin: user.login);
+    state = state.copyWith(token: token, user: user);
     await _persist();
   }
 
   Future<void> setUser(User user) async {
-    state = state.copyWith(user: user, lastLogin: user.login);
+    state = state.copyWith(user: user);
     await _persist();
   }
 

@@ -12,19 +12,13 @@ import 'package:learn_flutter/features/repos/data/github_repo_remote.dart';
 import 'package:learn_flutter/features/repos/data/repo_repository_impl.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
-import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
 
 final appConfigProvider = Provider<AppConfig>((ref) => AppConfig.github);
 
-final cacheStoreProvider = Provider<CacheStore>((ref) {
-  return createCacheStore(ref.watch(settingsProvider.select((s) => s.cache)));
-});
+final cacheStoreProvider = Provider<CacheStore>((ref) => createCacheStore());
 
 final cacheOptionsProvider = Provider<CacheOptions>((ref) {
-  return createCacheOptions(
-    ref.watch(settingsProvider.select((s) => s.cache)),
-    store: ref.watch(cacheStoreProvider),
-  );
+  return createCacheOptions(store: ref.watch(cacheStoreProvider));
 });
 
 final dioProvider = Provider<Dio>((ref) {

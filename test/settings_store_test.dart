@@ -12,11 +12,19 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  test('migrates theme and locale from legacy profile', () async {
+  test('load returns defaults when nothing is stored', () async {
+    final store = SettingsStore(prefs: await SharedPreferences.getInstance());
+    final settings = await store.load();
+
+    expect(settings.theme, 0);
+    expect(settings.locale, isNull);
+    expect(settings.themeMode, isNull);
+  });
+
+  test('load reads app_settings', () async {
     SharedPreferences.setMockInitialValues({
-      'profile': jsonEncode({
+      'app_settings': jsonEncode({
         'theme': 2,
-        'token': 'legacy-token',
         'locale': 'zh',
         'themeMode': 'dark',
       }),
@@ -40,5 +48,6 @@ void main() {
     expect(saved['theme'], 1);
     expect(saved['locale'], 'en');
     expect(saved.containsKey('token'), isFalse);
+    expect(saved.containsKey('cache'), isFalse);
   });
 }
