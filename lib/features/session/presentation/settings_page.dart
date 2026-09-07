@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:learn_flutter/core/l10n/l10n_ext.dart';
 import 'package:learn_flutter/core/theme/app_themes.dart';
 import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
@@ -96,6 +98,14 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ),
+          if (kDebugMode) ...[
+            const Divider(),
+            ListTile(
+              title: Text(l10n.debugLogs),
+              leading: const Icon(Icons.bug_report_outlined),
+              onTap: () => context.push('/logs'),
+            ),
+          ],
         ],
       ),
     );

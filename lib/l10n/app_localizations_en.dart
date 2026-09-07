@@ -45,6 +45,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get debugLogs => 'Logs';
+
+  @override
   String get language => 'Language';
 
   @override

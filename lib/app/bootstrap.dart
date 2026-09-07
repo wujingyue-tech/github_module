@@ -2,9 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/app/app.dart';
+import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/app/error_hooks.dart';
 import 'package:learn_flutter/app/preview.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 /// Loads persisted auth and settings before the first frame.
 ///
@@ -13,21 +16,22 @@ import 'package:learn_flutter/features/session/presentation/settings_provider.da
 /// process lifetime.
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final talker = TalkerFlutter.init(
+    logger: TalkerLogger(output: debugPrint),
+  );
   final container = ProviderContainer(
     retry: kDebugMode && appPreview != AppPreview.off ? (_, _) => null : null,
-    overrides: [if (kDebugMode) ...previewOverrides()],
+    overrides: [
+      talkerProvider.overrideWithValue(talker),
+      if (kDebugMode) ...previewOverrides(),
+    ],
   );
+  final log = container.read(appLogProvider);
+  installErrorHooks(log);
   await restoreForStartup(
     container,
     onError: (error, stackTrace) {
-      FlutterError.reportError(
-        FlutterErrorDetails(
-          exception: error,
-          stack: stackTrace,
-          library: 'bootstrap',
-          context: ErrorDescription('startup restore failed'),
-        ),
-      );
+      log.report(error, stackTrace, 'startup restore');
     },
   );
   runApp(

@@ -164,6 +164,12 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @debugLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Logs'**
+  String get debugLogs;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:

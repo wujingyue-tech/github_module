@@ -18,6 +18,9 @@ dependencies:
   go_router: ^18.0.1
   intl: any
   shared_preferences: ^2.5.5
+  talker: ^5.1.20
+  talker_dio_logger: ^5.1.20
+  talker_flutter: ^5.1.20
 
 dev_dependencies:
   flutter_test:

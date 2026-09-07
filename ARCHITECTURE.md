@@ -42,11 +42,12 @@ core         → (nothing in features)
 | `AuthNotifier` | Login flow; persist via `SessionNotifier` | Call Dio |
 | `SessionNotifier` / `SettingsNotifier` | Auth vs settings state + restore | Open prefs / Keychain |
 | `dioProvider` | Assemble Dio + interceptors | `ref.watch` session inside interceptors |
+| `AppLog` / `TalkerAppLog` | Console + in-app log history | Pages calling Talker / `print` |
 | `DioCacheInterceptor` | Browser-like GET cache from HTTP headers | Custom `refresh` / `noCache` flags or per-call `CacheOptions` |
 
 ## Startup
 
-`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported and ignored so the app still starts logged-out with default settings.
+`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported through `AppLog` and ignored so the app still starts logged-out with default settings. `FlutterError.onError` and `PlatformDispatcher.instance.onError` also go to `AppLog`. Debug builds can open Talker's log screen at `/logs` (Settings).
 
 ## Configuration
 

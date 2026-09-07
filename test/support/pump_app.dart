@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/app.dart';
+import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/core/logging/noop_app_log.dart';
 import 'package:learn_flutter/features/session/domain/app_settings.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/domain/auth_store.dart';
@@ -46,7 +48,10 @@ Future<void> pumpPage(
   await tester.pumpWidget(
     ProviderScope(
       retry: (_, _) => null,
-      overrides: overrides,
+      overrides: [
+        appLogProvider.overrideWithValue(const NoOpAppLog()),
+        ...overrides,
+      ],
       child: MaterialApp(
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -64,7 +69,10 @@ Future<ProviderContainer> pumpMainApp(
 }) async {
   final container = ProviderContainer(
     retry: (_, _) => null,
-    overrides: overrides,
+    overrides: [
+      appLogProvider.overrideWithValue(const NoOpAppLog()),
+      ...overrides,
+    ],
   );
   addTearDown(container.dispose);
   if (restoreSession) {

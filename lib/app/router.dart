@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:learn_flutter/app/log_viewer_page.dart';
 import 'package:learn_flutter/features/auth/presentation/login_page.dart';
 import 'package:learn_flutter/features/auth/presentation/profile_page.dart';
 import 'package:learn_flutter/features/repos/presentation/app_shell.dart';
@@ -27,8 +28,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final path = state.matchedLocation;
       final loggingIn = path == '/login';
       final inSettings = path == '/settings';
+      final inLogs = path == '/logs';
       final loggedIn = ref.read(sessionProvider).isLoggedIn;
-      if (!loggedIn && !loggingIn && !inSettings) return '/login';
+      if (!loggedIn && !loggingIn && !inSettings && !inLogs) return '/login';
       if (loggedIn && (loggingIn || path == '/')) return '/repos';
       return null;
     },
@@ -38,6 +40,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         builder: (context, state) => const SettingsPage(),
       ),
+      if (kDebugMode)
+        GoRoute(
+          path: '/logs',
+          builder: (context, state) => const LogViewerPage(),
+        ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppShell(navigationShell: navigationShell);

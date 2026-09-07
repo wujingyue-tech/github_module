@@ -92,6 +92,8 @@ ref.read(sessionProvider.notifier).clearAuth()
 
 不要 import `features/session/data/auth_store_impl.dart`。测登录时 override `authStoreProvider` 成内存实现，不要为了测 Notifier 去 mock `SharedPreferences`。
 
+日志用 `ref.read(appLogProvider)`，不要在 Page 里 import `talker`。取消请求和空 token 不要 `report`。
+
 ## 6. 接到路由和文案
 
 在 `lib/app/router.dart` 加 `GoRoute`。需要登录的页面，现有 redirect 会挡住未登录用户。
@@ -136,6 +138,7 @@ Release 不会挂这些 override。看完改回 `AppPreview.off`。
 | 超时、主题、通用错误、`RequestCancel` | `core/` | 把某个业务的 `Issue` 塞进来 |
 | 取消进行中的请求 | `RequestCancel` + `ref.onDispose` | 把 Dio `CancelToken` 写进 domain；取消后当成失败页 |
 | HTTP 环境 | `AppConfig.resolve()` / `appConfigProvider` | 改 `AppConfig.github` 的地址来指向假后端 |
+| 日志 / 上报 | `AppLog`（`ref.read(appLogProvider)`） | 页面里 `print` / `Talker()` / 把 token 打进日志 |
 
 跨 feature 只走两条路：对方的 **domain 类型**（例如 Issues 用 `User`），或 **`app/di.dart` 里的 provider**。
 

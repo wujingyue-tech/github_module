@@ -11,6 +11,7 @@
   "signOut": "Sign out",
   "savedToken": "Token saved",
   "settings": "Settings",
+  "debugLogs": "Logs",
   "language": "Language",
   "languageSystem": "System default",
   "languageChinese": "中文",
