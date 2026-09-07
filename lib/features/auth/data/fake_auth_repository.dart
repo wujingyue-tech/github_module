@@ -1,0 +1,39 @@
+import 'package:learn_flutter/core/error/app_exception.dart';
+import 'package:learn_flutter/features/auth/domain/auth_repository.dart';
+import 'package:learn_flutter/features/auth/domain/user.dart';
+
+const previewUser = User(
+  login: 'octocat',
+  avatarUrl: 'https://example.com/a.png',
+  type: 'User',
+  name: 'Octocat',
+  publicRepos: 0,
+  followers: 0,
+  following: 0,
+  totalPrivateRepos: 0,
+  ownedPrivateRepos: 0,
+);
+
+/// In-memory [AuthRepository] for snapshot preview and notifier tests.
+class FakeAuthRepository implements AuthRepository {
+  const FakeAuthRepository({this.user, this.error});
+
+  factory FakeAuthRepository.success([User? user]) {
+    return FakeAuthRepository(user: user ?? previewUser);
+  }
+
+  factory FakeAuthRepository.error([
+    AppErrorCode code = AppErrorCode.invalidToken,
+  ]) {
+    return FakeAuthRepository(error: AppException(code));
+  }
+
+  final User? user;
+  final Object? error;
+
+  @override
+  Future<User> getUser({String? token, Map<String, String>? headers}) async {
+    if (error != null) throw error!;
+    return user!;
+  }
+}

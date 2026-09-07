@@ -1,27 +1,16 @@
 import 'dart:async';
 
 import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
+import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
-
-const previewOwner = User(
-  login: 'octocat',
-  avatarUrl: 'https://example.com/a.png',
-  type: 'User',
-  publicRepos: 0,
-  followers: 0,
-  following: 0,
-  totalPrivateRepos: 0,
-  ownedPrivateRepos: 0,
-);
 
 Repo sampleRepo(int id) {
   return Repo(
     id: id,
     name: 'repo-$id',
     fullName: 'octocat/repo-$id',
-    owner: previewOwner,
+    owner: previewUser,
     private: false,
     fork: false,
     forksCount: 1,

@@ -7,11 +7,7 @@ import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
 /// Release builds never apply these overrides. Leave [AppPreview.off] when
 /// you want the real GitHub port.
 ///
-/// This is snapshot preview (one fixed response). It is not a multi-step
-/// flow script. See ADD_FEATURE.md.
-///
-/// [Override] comes from `package:flutter_riverpod/misc.dart`, not the
-/// main flutter_riverpod barrel.
+/// [Override] comes from `package:flutter_riverpod/misc.dart`.
 enum AppPreview {
   off,
   reposEmpty,

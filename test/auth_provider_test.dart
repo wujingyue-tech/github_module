@@ -3,30 +3,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/features/auth/domain/auth_repository.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
+import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
 import 'package:learn_flutter/features/auth/presentation/auth_provider.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-const _user = User(
-  login: 'octocat',
-  avatarUrl: 'https://example.com/a.png',
-  type: 'User',
-  publicRepos: 1,
-  followers: 0,
-  following: 0,
-  totalPrivateRepos: 0,
-  ownedPrivateRepos: 0,
-);
-
-class _FakeAuthRepository implements AuthRepository {
-  const _FakeAuthRepository();
-
-  @override
-  Future<User> getUser({String? token, Map<String, String>? headers}) async =>
-      _user;
-}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +19,7 @@ void main() {
   test('empty token does not write session', () async {
     final container = ProviderContainer(
       overrides: [
-        authRepositoryProvider.overrideWithValue(const _FakeAuthRepository()),
+        authRepositoryProvider.overrideWithValue(FakeAuthRepository.success()),
       ],
     );
     addTearDown(container.dispose);
@@ -55,7 +35,7 @@ void main() {
   test('login writes auth session', () async {
     final container = ProviderContainer(
       overrides: [
-        authRepositoryProvider.overrideWithValue(const _FakeAuthRepository()),
+        authRepositoryProvider.overrideWithValue(FakeAuthRepository.success()),
       ],
     );
     addTearDown(container.dispose);

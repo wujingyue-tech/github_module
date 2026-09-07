@@ -34,7 +34,18 @@ class RepoListPage extends ConsumerWidget {
         ),
         data: (data) {
           if (data.items.isEmpty) {
-            return Center(child: Text(l10n.reposEmpty));
+            return RefreshIndicator(
+              onRefresh: () => ref.read(repoListProvider.notifier).refresh(),
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.6,
+                    child: Center(child: Text(l10n.reposEmpty)),
+                  ),
+                ],
+              ),
+            );
           }
           return NotificationListener<ScrollNotification>(
             onNotification: (notification) {

@@ -13,8 +13,7 @@ import 'package:learn_flutter/features/session/presentation/settings_provider.da
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   final container = ProviderContainer(
-    /// https://riverpod.dev/docs/concepts2/retry
-    // retry: (_, _) => null,
+    retry: kDebugMode && appPreview != AppPreview.off ? (_, _) => null : null,
     overrides: [if (kDebugMode) ...previewOverrides()],
   );
   try {

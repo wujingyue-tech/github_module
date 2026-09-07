@@ -118,7 +118,7 @@ Release 不会挂这些 override。看完改回 `AppPreview.off`。
 
 同一份 Fake 给 Notifier 测试用，不要在 `test/` 再写一套只会 `return []` 的类。
 
-多步点击的流程剧本这里不做；那种是按调用次数往下走的 Scripted Fake，和单点不是一层。
+多步操作路径不要在客户端排队列。以后用独立假后端 / sandbox，App 仍走真 Dio 和真 Notifier。
 
 ## 落点清单
 
