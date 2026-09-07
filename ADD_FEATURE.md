@@ -110,7 +110,7 @@ ref.read(sessionProvider.notifier).clearAuth()
 后端或蓝牙还没好、只想看空态 / 错误 / 满页时：假 **domain 端口**，不要假 Dio，也不要假 Notifier。
 
 1. 在该 feature 的 `data/` 写 `FakeXxxRepository`，实现同一个接口。对照 `features/repos/data/fake_repo_repository.dart`。
-2. 在 `lib/app/preview.dart` 加一个 `AppPreview` 枚举值，并在 `previewRepoRepository()`（或以后的同类函数）里返回对应 Fake。`bootstrap()` 负责 `overrideWithValue`。
+2. 在 `lib/app/preview.dart` 加一个 `AppPreview` 枚举值，并在 `previewOverrides()` 里 `overrideWithValue`。`bootstrap()` 只 spread 这一份列表，不用再改。`Override` 从 `package:flutter_riverpod/misc.dart` 导入，不要从主库找这个类型。
 3. 把 `appPreview` 改成那个值，**hot restart**（`ProviderContainer` 只在启动时建一次）。
 4. 需要登录的页，先用真登录走进去；预览只替换这一页用到的端口。
 

@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/app/app.dart';
-import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/app/preview.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
@@ -13,14 +12,10 @@ import 'package:learn_flutter/features/session/presentation/settings_provider.da
 /// disposed if restore fails before [runApp].
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final previewRepos = kDebugMode ? previewRepoRepository() : null;
   final container = ProviderContainer(
     /// https://riverpod.dev/docs/concepts2/retry
     // retry: (_, _) => null,
-    overrides: [
-      if (previewRepos != null)
-        repoRepositoryProvider.overrideWithValue(previewRepos),
-    ],
+    overrides: [if (kDebugMode) ...previewOverrides()],
   );
   try {
     await Future.wait([

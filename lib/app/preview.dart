@@ -1,13 +1,17 @@
+import 'package:flutter_riverpod/misc.dart';
+import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
-import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 
 /// Debug snapshot of one UI state. Change [appPreview], then **hot restart**.
 ///
-/// Release builds never apply these fakes. Leave [AppPreview.off] when you
-/// want the real GitHub port.
+/// Release builds never apply these overrides. Leave [AppPreview.off] when
+/// you want the real GitHub port.
 ///
 /// This is snapshot preview (one fixed response). It is not a multi-step
 /// flow script. See ADD_FEATURE.md.
+///
+/// [Override] comes from `package:flutter_riverpod/misc.dart`, not the
+/// main flutter_riverpod barrel.
 enum AppPreview {
   off,
   reposEmpty,
@@ -19,14 +23,23 @@ enum AppPreview {
 
 const appPreview = AppPreview.off;
 
-/// Fake port for the selected snapshot, or `null` to use DI's real impl.
-RepoRepository? previewRepoRepository() {
+List<Override> previewOverrides() {
   return switch (appPreview) {
-    AppPreview.off => null,
-    AppPreview.reposEmpty => FakeRepoRepository.empty(),
-    AppPreview.reposError => FakeRepoRepository.error(),
-    AppPreview.reposList => FakeRepoRepository.list(),
-    AppPreview.reposHasMore => FakeRepoRepository.hasMore(),
-    AppPreview.reposLoading => FakeRepoRepository.loading(),
+    AppPreview.off => const [],
+    AppPreview.reposEmpty => [
+      repoRepositoryProvider.overrideWithValue(FakeRepoRepository.empty()),
+    ],
+    AppPreview.reposError => [
+      repoRepositoryProvider.overrideWithValue(FakeRepoRepository.error()),
+    ],
+    AppPreview.reposList => [
+      repoRepositoryProvider.overrideWithValue(FakeRepoRepository.list()),
+    ],
+    AppPreview.reposHasMore => [
+      repoRepositoryProvider.overrideWithValue(FakeRepoRepository.hasMore()),
+    ],
+    AppPreview.reposLoading => [
+      repoRepositoryProvider.overrideWithValue(FakeRepoRepository.loading()),
+    ],
   };
 }
