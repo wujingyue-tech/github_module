@@ -15,7 +15,7 @@ lib/
   l10n/          generated localizations (Flutter codegen)
 ```
 
-Persistence for auth and settings lives in `features/session/data`. `core` stays free of feature types.
+Persistence for auth and settings is a domain port (`AuthStore` / `SettingsStore`) with the I/O implementation in `features/session/data`. `core` stays free of feature types. Notifiers must not call `SharedPreferences` or Keychain directly.
 
 ## Dependency rules
 
@@ -39,7 +39,7 @@ core         → (nothing in features)
 | `GitHubAuthRemote` / `GitHubRepoRemote` | HTTP, DTO parse, `mapDioException` | Write session |
 | `AuthRepository` / `RepoRepository` | DTO → entity | Hold Riverpod state |
 | `AuthNotifier` | Login flow; persist via `SessionNotifier` | Call Dio |
-| `SessionNotifier` / `SettingsNotifier` | Auth vs settings state + restore | Call GitHub |
+| `SessionNotifier` / `SettingsNotifier` | Auth vs settings state + restore | Open prefs / Keychain |
 | `dioProvider` | Assemble Dio + interceptors | `ref.watch` session inside interceptors |
 | `DioCacheInterceptor` | Browser-like GET cache from HTTP headers | Custom `refresh` / `noCache` flags or per-call `CacheOptions` |
 

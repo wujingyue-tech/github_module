@@ -4,36 +4,39 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:learn_flutter/features/auth/data/user_dto.dart';
 import 'package:learn_flutter/features/auth/domain/user.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
+import 'package:learn_flutter/features/session/domain/auth_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthStore {
-  AuthStore({required this.prefs, required this.secure});
+class AuthStoreImpl implements AuthStore {
+  AuthStoreImpl({this._prefs, FlutterSecureStorage? secure})
+    : _secure = secure ?? const FlutterSecureStorage();
 
   static const userKey = 'auth_user';
   static const tokenKey = 'github_token';
 
-  final SharedPreferences prefs;
-  final FlutterSecureStorage secure;
+  SharedPreferences? _prefs;
+  final FlutterSecureStorage _secure;
 
-  static Future<AuthStore> open() async {
-    return AuthStore(
-      prefs: await SharedPreferences.getInstance(),
-      secure: const FlutterSecureStorage(),
-    );
+  Future<SharedPreferences> _ensurePrefs() async {
+    return _prefs ??= await SharedPreferences.getInstance();
   }
 
+  @override
   Future<AuthSession> load() async {
+    final prefs = await _ensurePrefs();
     return AuthSession(
-      token: await secure.read(key: tokenKey),
+      token: await _secure.read(key: tokenKey),
       user: _userFromRaw(prefs.getString(userKey)),
     );
   }
 
+  @override
   Future<void> save(AuthSession session) async {
+    final prefs = await _ensurePrefs();
     if (session.token == null || session.token!.isEmpty) {
-      await secure.delete(key: tokenKey);
+      await _secure.delete(key: tokenKey);
     } else {
-      await secure.write(key: tokenKey, value: session.token);
+      await _secure.write(key: tokenKey, value: session.token);
     }
 
     if (session.user == null) {

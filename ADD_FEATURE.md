@@ -88,7 +88,7 @@ ref.read(sessionProvider).token
 ref.read(sessionProvider.notifier).clearAuth()
 ```
 
-不要 import `features/session/data/auth_store.dart`。
+不要 import `features/session/data/auth_store_impl.dart`。测登录时 override `authStoreProvider` 成内存实现，不要为了测 Notifier 去 mock `SharedPreferences`。
 
 ## 6. 接到路由和文案
 
@@ -124,10 +124,11 @@ Release 不会挂这些 override。看完改回 `AppPreview.off`。
 
 | 你在写的东西 | 放哪 | 不要做 |
 | --- | --- | --- |
-| `Issue`、`IssueRepository` | `domain/` | import Dio / MQTT / 蓝牙 / Flutter |
+| `Issue`、`IssueRepository`、`AuthStore` | `domain/` | import Dio / MQTT / 蓝牙 / Flutter |
 | JSON、HTTP、本地存储、设备协议 | `data/` | import Notifier |
 | 页面、Notifier | `presentation/` | import 别的 feature 的 `data/` |
 | 组装 client / Repository | `app/di.dart` | 在 Page 里 `XxxRemote()` |
+| 会话 / 设置存储 | `authStoreProvider` / `settingsStoreProvider` | 在 Notifier 里直接 `SharedPreferences.getInstance()` |
 | 某一帧预览 | `data/fake_*.dart` + `app/preview.dart` | 假 Dio / 假 Notifier 来看空态、错误页 |
 | 超时、主题、通用错误 | `core/` | 把某个业务的 `Issue` 塞进来 |
 

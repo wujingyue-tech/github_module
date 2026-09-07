@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/features/session/data/settings_store.dart';
+import 'package:learn_flutter/features/session/data/settings_store_impl.dart';
 import 'package:learn_flutter/features/session/domain/app_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,7 +13,9 @@ void main() {
   });
 
   test('load returns defaults when nothing is stored', () async {
-    final store = SettingsStore(prefs: await SharedPreferences.getInstance());
+    final store = SettingsStoreImpl(
+      prefs: await SharedPreferences.getInstance(),
+    );
     final settings = await store.load();
 
     expect(settings.theme, 0);
@@ -30,7 +32,9 @@ void main() {
       }),
     });
 
-    final store = SettingsStore(prefs: await SharedPreferences.getInstance());
+    final store = SettingsStoreImpl(
+      prefs: await SharedPreferences.getInstance(),
+    );
     final settings = await store.load();
 
     expect(settings.theme, 2);
@@ -39,7 +43,9 @@ void main() {
   });
 
   test('save writes app_settings key', () async {
-    final store = SettingsStore(prefs: await SharedPreferences.getInstance());
+    final store = SettingsStoreImpl(
+      prefs: await SharedPreferences.getInstance(),
+    );
     await store.save(const AppSettings(theme: 1, locale: 'en'));
 
     final prefs = await SharedPreferences.getInstance();

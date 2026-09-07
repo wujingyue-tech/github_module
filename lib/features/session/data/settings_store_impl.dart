@@ -1,20 +1,23 @@
 import 'dart:convert';
 
 import 'package:learn_flutter/features/session/domain/app_settings.dart';
+import 'package:learn_flutter/features/session/domain/settings_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsStore {
-  SettingsStore({required this.prefs});
+class SettingsStoreImpl implements SettingsStore {
+  SettingsStoreImpl({this._prefs});
 
   static const settingsKey = 'app_settings';
 
-  final SharedPreferences prefs;
+  SharedPreferences? _prefs;
 
-  static Future<SettingsStore> open() async {
-    return SettingsStore(prefs: await SharedPreferences.getInstance());
+  Future<SharedPreferences> _ensurePrefs() async {
+    return _prefs ??= await SharedPreferences.getInstance();
   }
 
+  @override
   Future<AppSettings> load() async {
+    final prefs = await _ensurePrefs();
     final raw = prefs.getString(settingsKey);
     if (raw == null) return const AppSettings();
     try {
@@ -24,7 +27,9 @@ class SettingsStore {
     }
   }
 
+  @override
   Future<void> save(AppSettings settings) async {
+    final prefs = await _ensurePrefs();
     await prefs.setString(settingsKey, jsonEncode(_toJson(settings)));
   }
 
