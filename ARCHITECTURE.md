@@ -49,3 +49,5 @@ core         → (nothing in features)
 ## Configuration
 
 `AppConfig` in `core/network` holds base URL and timeouts. Swap it through `appConfigProvider` for flavors later.
+
+How to add a feature (HTTP, MQTT, or Bluetooth): [ADD_FEATURE.md](ADD_FEATURE.md).
