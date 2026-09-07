@@ -100,10 +100,11 @@ ref.read(sessionProvider.notifier).clearAuth()
 
 ## 7. 补测试
 
-至少两层：
+至少两层，关键页再加 widget 测试：
 
 - Remote / Repository：用假 `HttpClientAdapter`（或假 MQTT/蓝牙 client）喂数据
 - Notifier：override 一个 Fake Repository，测 loading / data / error
+- 页面：override 端口后 `pump` 空态 / 错误 / 列表 / 登录跳转。对照 `test/repo_list_page_test.dart`、`test/login_page_test.dart`、`test/router_test.dart`。不要为了测 UI 去假 Notifier。
 
 对照 `test/repo_repository_test.dart` 和 `test/repo_list_provider_test.dart`。
 
