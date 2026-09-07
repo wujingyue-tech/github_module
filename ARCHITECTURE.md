@@ -50,7 +50,14 @@ core         → (nothing in features)
 
 ## Configuration
 
-`AppConfig` in `core/network` holds base URL and timeouts. Swap it through `appConfigProvider` for flavors later.
+`AppConfig` in `core/network` holds base URL and timeouts. `appConfigProvider` uses `AppConfig.resolve()` (`APP_ENV`, optional `API_BASE_URL`). Override the provider in tests; do not edit the `github` preset to point at a fake backend.
+
+```text
+flutter run --dart-define=APP_ENV=sandbox
+flutter run --dart-define=APP_ENV=sandbox --dart-define=API_BASE_URL=http://10.0.2.2:8080/
+```
+
+Needs a full restart (not hot reload). `MqttConfig` / `BleConfig` stay separate when those channels appear.
 
 Debug snapshot preview lives in `app/preview.dart`. It overrides domain ports (never Dio or notifiers) so one UI state can be inspected. How to add a case: [ADD_FEATURE.md](ADD_FEATURE.md).
 

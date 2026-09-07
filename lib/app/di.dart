@@ -13,7 +13,7 @@ import 'package:learn_flutter/features/repos/data/repo_repository_impl.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 
-final appConfigProvider = Provider<AppConfig>((ref) => AppConfig.github);
+final appConfigProvider = Provider<AppConfig>((ref) => AppConfig.resolve());
 
 final cacheStoreProvider = Provider<CacheStore>((ref) => createCacheStore());
 
