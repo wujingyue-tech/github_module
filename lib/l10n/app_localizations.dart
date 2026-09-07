@@ -302,10 +302,28 @@ abstract class AppLocalizations {
   /// **'Connection timed out. Check your network.'**
   String get authErrorTimeout;
 
+  /// No description provided for @authErrorOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No network connection.'**
+  String get authErrorOffline;
+
+  /// No description provided for @authErrorRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please wait and try again.'**
+  String get authErrorRateLimited;
+
+  /// No description provided for @authErrorParseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not parse the server response.'**
+  String get authErrorParseFailed;
+
   /// No description provided for @authErrorFailed.
   ///
   /// In en, this message translates to:
-  /// **'Sign-in failed'**
+  /// **'Request failed'**
   String get authErrorFailed;
 
   /// No description provided for @reposTab.

@@ -116,7 +116,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authErrorTimeout => 'Connection timed out. Check your network.';
 
   @override
-  String get authErrorFailed => 'Sign-in failed';
+  String get authErrorOffline => 'No network connection.';
+
+  @override
+  String get authErrorRateLimited =>
+      'Too many requests. Please wait and try again.';
+
+  @override
+  String get authErrorParseFailed => 'Could not parse the server response.';
+
+  @override
+  String get authErrorFailed => 'Request failed';
 
   @override
   String get reposTab => 'Repos';

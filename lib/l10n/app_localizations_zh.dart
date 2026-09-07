@@ -114,7 +114,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get authErrorTimeout => '连接超时，请检查网络';
 
   @override
-  String get authErrorFailed => '登录失败';
+  String get authErrorOffline => '当前没有网络连接';
+
+  @override
+  String get authErrorRateLimited => '请求过于频繁，请稍后再试';
+
+  @override
+  String get authErrorParseFailed => '无法解析服务器返回的数据';
+
+  @override
+  String get authErrorFailed => '请求失败';
 
   @override
   String get reposTab => '仓库';
