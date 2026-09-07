@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 
@@ -38,18 +39,31 @@ class RepoListState {
 }
 
 class RepoListNotifier extends AsyncNotifier<RepoListState> {
+  var _cancel = RequestCancel();
   var _loadingMore = false;
 
   @override
-  Future<RepoListState> build() => _fetch(page: 1);
+  Future<RepoListState> build() {
+    ref.onDispose(() => _cancel.cancel());
+    return _fetch(page: 1);
+  }
 
   RepoRepository get _repo => ref.read(repoRepositoryProvider);
+
+  void _replaceCancel() {
+    _cancel.cancel();
+    _cancel = RequestCancel();
+  }
 
   Future<RepoListState> _fetch({
     required int page,
     Map<String, String>? headers,
   }) async {
-    final items = await _repo.listRepos(page: page, headers: headers);
+    final items = await _repo.listRepos(
+      page: page,
+      headers: headers,
+      cancel: _cancel,
+    );
     return RepoListState(
       items: items,
       page: page,
@@ -58,9 +72,16 @@ class RepoListNotifier extends AsyncNotifier<RepoListState> {
   }
 
   Future<void> refresh() async {
-    state = await AsyncValue.guard(
-      () => _fetch(page: 1, headers: const {'cache-control': 'no-cache'}),
-    );
+    _replaceCancel();
+    try {
+      state = AsyncData(
+        await _fetch(page: 1, headers: const {'cache-control': 'no-cache'}),
+      );
+    } on RequestCancelledException {
+      return;
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+    }
   }
 
   Future<void> loadMore() async {
@@ -74,7 +95,7 @@ class RepoListNotifier extends AsyncNotifier<RepoListState> {
     _loadingMore = true;
     try {
       final nextPage = current.page + 1;
-      final more = await _repo.listRepos(page: nextPage);
+      final more = await _repo.listRepos(page: nextPage, cancel: _cancel);
       state = AsyncData(
         current.copyWith(
           items: [...current.items, ...more],
@@ -83,6 +104,8 @@ class RepoListNotifier extends AsyncNotifier<RepoListState> {
           clearLoadMoreError: true,
         ),
       );
+    } on RequestCancelledException {
+      return;
     } catch (error) {
       state = AsyncData(current.copyWith(loadMoreError: error));
     } finally {

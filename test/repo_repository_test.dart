@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/repos/data/github_repo_remote.dart';
 import 'package:learn_flutter/features/repos/data/repo_repository_impl.dart';
 
@@ -70,4 +71,30 @@ void main() {
     expect(repos.first.licenseName, 'MIT');
     expect(repos.first.owner.login, 'octocat');
   });
+
+  test('cancel stops the HTTP call', () async {
+    final dio = Dio(BaseOptions(baseUrl: 'https://api.github.com/'))
+      ..httpClientAdapter = _CancelAdapter();
+    final repo = RepoRepositoryImpl(GitHubRepoRemote(dio));
+    final cancel = RequestCancel();
+    final future = repo.listRepos(page: 1, cancel: cancel);
+    await Future<void>.delayed(Duration.zero);
+    cancel.cancel();
+    await expectLater(future, throwsA(isA<RequestCancelledException>()));
+  });
+}
+
+class _CancelAdapter implements HttpClientAdapter {
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    await cancelFuture;
+    throw DioException(requestOptions: options, type: DioExceptionType.cancel);
+  }
+
+  @override
+  void close({bool force = false}) {}
 }

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:learn_flutter/core/error/app_exception.dart';
 import 'package:learn_flutter/core/error/map_dio_exception.dart';
+import 'package:learn_flutter/core/network/dio_cancel.dart';
+import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 
 import 'repo_dto.dart';
@@ -13,6 +15,7 @@ class GitHubRepoRemote {
   Future<List<RepoDto>> listRepos({
     required int page,
     Map<String, String>? headers,
+    RequestCancel? cancel,
   }) async {
     try {
       final response = await _dio.get<List<dynamic>>(
@@ -23,6 +26,7 @@ class GitHubRepoRemote {
           'page': page,
         },
         options: Options(headers: headers),
+        cancelToken: cancelTokenFor(cancel),
       );
       final data = response.data;
       if (data == null) return [];
@@ -30,8 +34,13 @@ class GitHubRepoRemote {
           .map((e) => RepoDto.fromJson(e as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
+      if (e.type == DioExceptionType.cancel) {
+        throw const RequestCancelledException();
+      }
       throw mapDioException(e);
     } on AppException {
+      rethrow;
+    } on RequestCancelledException {
       rethrow;
     } catch (error, stackTrace) {
       throw AppException(

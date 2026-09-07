@@ -1,3 +1,4 @@
+import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 
@@ -12,8 +13,13 @@ class RepoRepositoryImpl implements RepoRepository {
   Future<List<Repo>> listRepos({
     required int page,
     Map<String, String>? headers,
+    RequestCancel? cancel,
   }) async {
-    final dtos = await _remote.listRepos(page: page, headers: headers);
+    final dtos = await _remote.listRepos(
+      page: page,
+      headers: headers,
+      cancel: cancel,
+    );
     return dtos.map((dto) => dto.toDomain()).toList();
   }
 }

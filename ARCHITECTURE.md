@@ -26,6 +26,7 @@ Persistence for auth and settings is a domain port (`AuthStore` / `SettingsStore
 ```text
 presentation → domain
 data         → domain
+domain       → core   (shared kernel only, e.g. RequestCancel)
 data         → core
 presentation → core
 app          → features + core
@@ -36,7 +37,7 @@ core         → (nothing in features)
 
 | Type | Does | Does not |
 | --- | --- | --- |
-| `GitHubAuthRemote` / `GitHubRepoRemote` | HTTP, DTO parse, `mapDioException` | Write session |
+| `GitHubAuthRemote` / `GitHubRepoRemote` | HTTP, DTO parse, `mapDioException`, map Dio cancel | Write session |
 | `AuthRepository` / `RepoRepository` | DTO → entity | Hold Riverpod state |
 | `AuthNotifier` | Login flow; persist via `SessionNotifier` | Call Dio |
 | `SessionNotifier` / `SettingsNotifier` | Auth vs settings state + restore | Open prefs / Keychain |

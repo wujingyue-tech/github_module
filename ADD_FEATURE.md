@@ -81,6 +81,8 @@ class IssueListNotifier extends AsyncNotifier<List<Issue>> {
 
 页面 `watch` 这个 provider，用 `Issue.title` 画 UI。不要在 Page 里解析 `Map`，不要在 Page 里直接 `dio.get`。
 
+列表这类会离开页面的请求：把 `RequestCancel` 传进 Repository，`ref.onDispose` 里 `cancel()`。对照 `repo_list_provider.dart`。不要把 Dio 的 `CancelToken` 写进 domain；取消不要映射成 `AppException.failed`。
+
 需要登录态时：
 
 ```dart
@@ -130,7 +132,8 @@ Release 不会挂这些 override。看完改回 `AppPreview.off`。
 | 组装 client / Repository | `app/di.dart` | 在 Page 里 `XxxRemote()` |
 | 会话 / 设置存储 | `authStoreProvider` / `settingsStoreProvider` | 在 Notifier 里直接 `SharedPreferences.getInstance()` |
 | 某一帧预览 | `data/fake_*.dart` + `app/preview.dart` | 假 Dio / 假 Notifier 来看空态、错误页 |
-| 超时、主题、通用错误 | `core/` | 把某个业务的 `Issue` 塞进来 |
+| 超时、主题、通用错误、`RequestCancel` | `core/` | 把某个业务的 `Issue` 塞进来 |
+| 取消进行中的请求 | `RequestCancel` + `ref.onDispose` | 把 Dio `CancelToken` 写进 domain；取消后当成失败页 |
 
 跨 feature 只走两条路：对方的 **domain 类型**（例如 Issues 用 `User`），或 **`app/di.dart` 里的 provider**。
 

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/core/error/app_exception.dart';
+import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 
@@ -22,5 +23,15 @@ void main() {
 
     final full = FakeRepoRepository.hasMore();
     expect(full.items, hasLength(RepoRepository.pageSize));
+  });
+
+  test('loading snapshot completes when cancelled', () async {
+    final cancel = RequestCancel();
+    final future = FakeRepoRepository.loading().listRepos(
+      page: 1,
+      cancel: cancel,
+    );
+    cancel.cancel();
+    await expectLater(future, throwsA(isA<RequestCancelledException>()));
   });
 }

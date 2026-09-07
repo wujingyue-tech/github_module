@@ -1,3 +1,5 @@
+import 'package:learn_flutter/core/request_cancel.dart';
+
 import 'repo.dart';
 
 abstract interface class RepoRepository {
@@ -6,5 +8,6 @@ abstract interface class RepoRepository {
   Future<List<Repo>> listRepos({
     required int page,
     Map<String, String>? headers,
+    RequestCancel? cancel,
   });
 }

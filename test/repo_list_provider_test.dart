@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/core/error/app_exception.dart';
+import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
@@ -12,6 +15,7 @@ class _FailingLoadMoreRepository implements RepoRepository {
   Future<List<Repo>> listRepos({
     required int page,
     Map<String, String>? headers,
+    RequestCancel? cancel,
   }) async {
     if (page == 1) return FakeRepoRepository.hasMore().items;
     throw AppException(AppErrorCode.failed);
@@ -93,6 +97,36 @@ void main() {
     expect(state.loadMoreError, isNull);
     expect(state.hasMore, isFalse);
   });
+
+  test('disposing the provider cancels an in-flight list', () async {
+    final container = ProviderContainer(
+      overrides: [
+        repoRepositoryProvider.overrideWithValue(FakeRepoRepository.loading()),
+      ],
+    );
+    final future = container.read(repoListProvider.future);
+    container.dispose();
+    await expectLater(future, throwsA(isA<RequestCancelledException>()));
+  });
+
+  test('refresh cancels in-flight loadMore without a footer error', () async {
+    final repo = _HangOnPage2Repository();
+    final container = ProviderContainer(
+      overrides: [repoRepositoryProvider.overrideWithValue(repo)],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(repoListProvider.future);
+    final loadMore = container.read(repoListProvider.notifier).loadMore();
+    await repo.page2Started.future;
+    await container.read(repoListProvider.notifier).refresh();
+    await loadMore;
+
+    expect(repo.page2Cancelled, isTrue);
+    final state = container.read(repoListProvider).requireValue;
+    expect(state.loadMoreError, isNull);
+    expect(state.page, 1);
+  });
 }
 
 class _FailThenSucceedLoadMoreRepository implements RepoRepository {
@@ -102,6 +136,7 @@ class _FailThenSucceedLoadMoreRepository implements RepoRepository {
   Future<List<Repo>> listRepos({
     required int page,
     Map<String, String>? headers,
+    RequestCancel? cancel,
   }) async {
     if (page == 1) return FakeRepoRepository.hasMore().items;
     _page2Calls++;
@@ -117,8 +152,32 @@ class _CountingFailingLoadMoreRepository extends _FailingLoadMoreRepository {
   Future<List<Repo>> listRepos({
     required int page,
     Map<String, String>? headers,
+    RequestCancel? cancel,
   }) async {
     calls++;
-    return super.listRepos(page: page, headers: headers);
+    return super.listRepos(page: page, headers: headers, cancel: cancel);
+  }
+}
+
+class _HangOnPage2Repository implements RepoRepository {
+  var page2Cancelled = false;
+  final page2Started = Completer<void>();
+
+  @override
+  Future<List<Repo>> listRepos({
+    required int page,
+    Map<String, String>? headers,
+    RequestCancel? cancel,
+  }) async {
+    if (page == 1) return FakeRepoRepository.hasMore().items;
+    if (!page2Started.isCompleted) page2Started.complete();
+    final completer = Completer<List<Repo>>();
+    cancel?.whenCancelled(() {
+      page2Cancelled = true;
+      if (!completer.isCompleted) {
+        completer.completeError(const RequestCancelledException());
+      }
+    });
+    return completer.future;
   }
 }

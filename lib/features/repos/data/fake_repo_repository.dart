@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:learn_flutter/core/error/app_exception.dart';
+import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
@@ -59,8 +60,20 @@ class FakeRepoRepository implements RepoRepository {
   Future<List<Repo>> listRepos({
     required int page,
     Map<String, String>? headers,
+    RequestCancel? cancel,
   }) async {
-    if (hang) return Completer<List<Repo>>().future;
+    if (hang) {
+      final completer = Completer<List<Repo>>();
+      cancel?.whenCancelled(() {
+        if (!completer.isCompleted) {
+          completer.completeError(const RequestCancelledException());
+        }
+      });
+      return completer.future;
+    }
+    if (cancel?.isCancelled ?? false) {
+      throw const RequestCancelledException();
+    }
     if (error != null) throw error!;
     return items;
   }
