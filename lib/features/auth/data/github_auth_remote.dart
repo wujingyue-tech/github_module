@@ -30,8 +30,12 @@ class GitHubAuthRemote {
       throw mapDioException(e);
     } on AppException {
       rethrow;
-    } catch (_) {
-      throw AppException(AppErrorCode.parseFailed);
+    } catch (error, stackTrace) {
+      throw AppException(
+        AppErrorCode.parseFailed,
+        cause: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }

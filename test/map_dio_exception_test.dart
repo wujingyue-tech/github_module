@@ -59,5 +59,15 @@ void main() {
       );
       expect(mapDioException(error).code, AppErrorCode.timeout);
     });
+
+    test('keeps the original DioException as cause', () {
+      final error = DioException(
+        requestOptions: RequestOptions(path: '/user'),
+        type: DioExceptionType.connectionError,
+      );
+      final mapped = mapDioException(error);
+      expect(mapped.code, AppErrorCode.offline);
+      expect(mapped.cause, same(error));
+    });
   });
 }

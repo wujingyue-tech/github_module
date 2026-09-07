@@ -62,17 +62,17 @@ void main() {
     expect(user.createdAt, DateTime.utc(2020, 1, 1));
   });
 
-  test('throws invalidToken on 401', () async {
-    final repo = repositoryWith(status: 401, body: '{"message":"bad"}');
-    expect(
-      () => repo.getUser(token: 'bad'),
-      throwsA(
-        isA<AppException>().having(
-          (e) => e.code,
-          'code',
-          AppErrorCode.invalidToken,
-        ),
-      ),
-    );
-  });
+  test(
+    'throws invalidToken on 401 and keeps the DioException as cause',
+    () async {
+      final repo = repositoryWith(status: 401, body: '{"message":"bad"}');
+      try {
+        await repo.getUser(token: 'bad');
+        fail('expected AppException');
+      } on AppException catch (error) {
+        expect(error.code, AppErrorCode.invalidToken);
+        expect(error.cause, isA<DioException>());
+      }
+    },
+  );
 }

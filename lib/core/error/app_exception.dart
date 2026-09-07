@@ -11,9 +11,15 @@ enum AppErrorCode {
 }
 
 class AppException implements Exception {
-  AppException(this.code);
+  AppException(this.code, {this.cause, this.stackTrace});
+
   final AppErrorCode code;
+  final Object? cause;
+  final StackTrace? stackTrace;
 
   @override
-  String toString() => 'AppException($code)';
+  String toString() {
+    if (cause == null) return 'AppException($code)';
+    return 'AppException($code, cause: $cause)';
+  }
 }

@@ -3,27 +3,29 @@ import 'package:dio/dio.dart';
 import 'app_exception.dart';
 
 AppException mapDioException(DioException error) {
+  return AppException(
+    _codeFor(error),
+    cause: error,
+    stackTrace: error.stackTrace,
+  );
+}
+
+AppErrorCode _codeFor(DioException error) {
   if (error.type == DioExceptionType.connectionError) {
-    return AppException(AppErrorCode.offline);
+    return AppErrorCode.offline;
   }
   final status = error.response?.statusCode;
-  if (status == 401) {
-    return AppException(AppErrorCode.invalidToken);
-  }
-  if (status == 429) {
-    return AppException(AppErrorCode.rateLimited);
-  }
+  if (status == 401) return AppErrorCode.invalidToken;
+  if (status == 429) return AppErrorCode.rateLimited;
   if (status == 403) {
     final remaining = error.response?.headers.value('x-ratelimit-remaining');
-    if (remaining == '0') {
-      return AppException(AppErrorCode.rateLimited);
-    }
-    return AppException(AppErrorCode.forbidden);
+    if (remaining == '0') return AppErrorCode.rateLimited;
+    return AppErrorCode.forbidden;
   }
   if (error.type == DioExceptionType.connectionTimeout ||
       error.type == DioExceptionType.receiveTimeout ||
       error.type == DioExceptionType.sendTimeout) {
-    return AppException(AppErrorCode.timeout);
+    return AppErrorCode.timeout;
   }
-  return AppException(AppErrorCode.failed);
+  return AppErrorCode.failed;
 }

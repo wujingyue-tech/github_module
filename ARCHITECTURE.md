@@ -45,7 +45,7 @@ core         → (nothing in features)
 
 ## Startup
 
-`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. It is disposed only if restore throws before `runApp`.
+`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported and ignored so the app still starts logged-out with default settings.
 
 ## Configuration
 
