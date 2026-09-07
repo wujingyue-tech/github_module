@@ -11,9 +11,9 @@ class RepoRepositoryImpl implements RepoRepository {
   @override
   Future<List<Repo>> listRepos({
     required int page,
-    bool refresh = false,
+    Map<String, String>? headers,
   }) async {
-    final dtos = await _remote.listRepos(page: page, refresh: refresh);
+    final dtos = await _remote.listRepos(page: page, headers: headers);
     return dtos.map((dto) => dto.toDomain()).toList();
   }
 }

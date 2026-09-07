@@ -23,7 +23,10 @@ class AuthNotifier extends AsyncNotifier<User?> {
     state = await AsyncValue.guard(() async {
       final user = await ref
           .read(authRepositoryProvider)
-          .getUser(token: trimmed);
+          .getUser(
+            token: trimmed,
+            headers: const {'cache-control': 'no-store'},
+          );
       await ref
           .read(sessionProvider.notifier)
           .setAuth(token: trimmed, user: user);
@@ -32,7 +35,9 @@ class AuthNotifier extends AsyncNotifier<User?> {
   }
 
   Future<void> refreshProfile() async {
-    final user = await ref.read(authRepositoryProvider).getUser(refresh: true);
+    final user = await ref
+        .read(authRepositoryProvider)
+        .getUser(headers: const {'cache-control': 'no-cache'});
     await ref.read(sessionProvider.notifier).setUser(user);
     state = AsyncData(user);
   }

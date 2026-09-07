@@ -12,7 +12,7 @@ class GitHubRepoRemote {
 
   Future<List<RepoDto>> listRepos({
     required int page,
-    bool refresh = false,
+    Map<String, String>? headers,
   }) async {
     try {
       final response = await _dio.get<List<dynamic>>(
@@ -22,9 +22,7 @@ class GitHubRepoRemote {
           'per_page': RepoRepository.pageSize,
           'page': page,
         },
-        options: Options(
-          extra: {if (refresh) 'refresh': true, if (refresh) 'list': true},
-        ),
+        options: Options(headers: headers),
       );
       final data = response.data;
       if (data == null) return [];

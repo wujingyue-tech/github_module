@@ -41,7 +41,7 @@ class _FakeRepoRepository implements RepoRepository {
   @override
   Future<List<Repo>> listRepos({
     required int page,
-    bool refresh = false,
+    Map<String, String>? headers,
   }) async {
     return pages[page - 1];
   }
@@ -51,7 +51,7 @@ class _FailingLoadMoreRepository implements RepoRepository {
   @override
   Future<List<Repo>> listRepos({
     required int page,
-    bool refresh = false,
+    Map<String, String>? headers,
   }) async {
     if (page == 1) {
       return [for (var i = 0; i < RepoRepository.pageSize; i++) _repo(i)];

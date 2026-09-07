@@ -24,7 +24,8 @@ class _FakeAuthRepository implements AuthRepository {
   const _FakeAuthRepository();
 
   @override
-  Future<User> getUser({String? token, bool refresh = false}) async => _user;
+  Future<User> getUser({String? token, Map<String, String>? headers}) async =>
+      _user;
 }
 
 void main() {

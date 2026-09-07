@@ -9,17 +9,16 @@ class GitHubAuthRemote {
 
   final Dio _dio;
 
-  Future<UserDto> getUser({String? token, bool refresh = false}) async {
+  Future<UserDto> getUser({String? token, Map<String, String>? headers}) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
         '/user',
         options: Options(
-          headers: {if (token != null) 'Authorization': 'Bearer $token'},
-          extra: {
-            if (token != null) 'authAttempt': true,
-            if (token != null) 'noCache': true,
-            if (refresh) 'refresh': true,
+          headers: {
+            if (token != null) 'Authorization': 'Bearer $token',
+            ...?headers,
           },
+          extra: {if (token != null) 'authAttempt': true},
         ),
       );
       final data = response.data;

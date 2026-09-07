@@ -49,6 +49,13 @@ abstract interface class IssueRepository {
 
 Repository **不要** `ref.read(sessionProvider)`。HTTP 的 token 由 `AuthInterceptor` 自动带上。
 
+GET 默认走 `DioCacheInterceptor`（`CachePolicy.request`，跟浏览器一样看响应的 `Cache-Control` / ETag）。某次请求不要缓存时，传标准头，不要自造 `refresh` / `noCache`：
+
+```dart
+headers: const {'cache-control': 'no-cache'}, // 强制再校验
+headers: const {'cache-control': 'no-store'}, // 不读也不写缓存
+```
+
 ## 4. 在 `app/di.dart` 挂上实现
 
 ```dart

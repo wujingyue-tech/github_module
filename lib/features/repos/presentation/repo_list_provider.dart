@@ -19,15 +19,15 @@ class RepoListNotifier extends AsyncNotifier<RepoListState> {
   var _loadingMore = false;
 
   @override
-  Future<RepoListState> build() => _fetch(page: 1, refresh: false);
+  Future<RepoListState> build() => _fetch(page: 1);
 
   RepoRepository get _repo => ref.read(repoRepositoryProvider);
 
   Future<RepoListState> _fetch({
     required int page,
-    required bool refresh,
+    Map<String, String>? headers,
   }) async {
-    final items = await _repo.listRepos(page: page, refresh: refresh);
+    final items = await _repo.listRepos(page: page, headers: headers);
     return RepoListState(
       items: items,
       page: page,
@@ -36,7 +36,9 @@ class RepoListNotifier extends AsyncNotifier<RepoListState> {
   }
 
   Future<void> refresh() async {
-    state = await AsyncValue.guard(() => _fetch(page: 1, refresh: true));
+    state = await AsyncValue.guard(
+      () => _fetch(page: 1, headers: const {'cache-control': 'no-cache'}),
+    );
   }
 
   Future<void> loadMore() async {

@@ -9,8 +9,8 @@ class AuthRepositoryImpl implements AuthRepository {
   final GitHubAuthRemote _remote;
 
   @override
-  Future<User> getUser({String? token, bool refresh = false}) async {
-    final dto = await _remote.getUser(token: token, refresh: refresh);
+  Future<User> getUser({String? token, Map<String, String>? headers}) async {
+    final dto = await _remote.getUser(token: token, headers: headers);
     return dto.toDomain();
   }
 }

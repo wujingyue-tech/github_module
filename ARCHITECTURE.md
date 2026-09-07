@@ -41,6 +41,7 @@ core         → (nothing in features)
 | `AuthNotifier` | Login flow; persist via `SessionNotifier` | Call Dio |
 | `SessionNotifier` / `SettingsNotifier` | Auth vs settings state + restore | Call GitHub |
 | `dioProvider` | Assemble Dio + interceptors | `ref.watch` session inside interceptors |
+| `DioCacheInterceptor` | Browser-like GET cache from HTTP headers | Custom `refresh` / `noCache` flags or per-call `CacheOptions` |
 
 ## Startup
 
