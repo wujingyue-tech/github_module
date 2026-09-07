@@ -14,6 +14,7 @@ import 'package:learn_flutter/features/session/presentation/settings_provider.da
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   final container = ProviderContainer(
+    // retry: (_, _) => null, 
     overrides: [
       if (kDebugMode && debugForceRepoListError)
         repoRepositoryProvider.overrideWithValue(
