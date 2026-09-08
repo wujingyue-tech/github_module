@@ -14,6 +14,7 @@ jobs:
         with:
           channel: stable
           cache: true
+          flutter-version-file: .fvmrc
       - run: flutter pub get
       - run: dart format --set-exit-if-changed .
       - run: dart analyze
