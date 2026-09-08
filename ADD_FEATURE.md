@@ -92,7 +92,7 @@ ref.read(sessionProvider.notifier).clearAuth()
 
 不要 import `features/session/data/auth_store_impl.dart`。测登录时 override `authStoreProvider` 成内存实现，不要为了测 Notifier 去 mock `SharedPreferences`。
 
-日志用 `ref.read(appLogProvider)`，不要在 Page 里 import `talker` 或 `sentry_flutter`。取消请求和空 token 不要 `report`。崩溃上报只走 `AppLog.report`（Sentry DSN 为空则不上报）。
+日志用 `ref.read(appLogProvider)`，不要在 Page 里 import `talker` 或 `sentry_flutter`。取消请求和空 token 不要 `report`。崩溃上报只走 `AppLog.report`（DSN 为空则不上报）。厂商 SDK 只放在 `lib/core/crash_reporting/sentry/`。
 
 ## 6. 接到路由和文案
 

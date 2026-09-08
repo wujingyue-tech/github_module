@@ -1,5 +1,5 @@
+import 'package:learn_flutter/core/crash_reporting/crash_reporter.dart';
 import 'package:learn_flutter/core/logging/app_log.dart';
-import 'package:learn_flutter/core/logging/crash_reporter.dart';
 import 'package:learn_flutter/core/logging/should_report.dart';
 import 'package:talker/talker.dart';
 

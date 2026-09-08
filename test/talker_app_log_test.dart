@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/logging/crash_reporter.dart';
+import 'package:learn_flutter/core/crash_reporting/crash_reporter.dart';
 import 'package:learn_flutter/core/logging/talker_app_log.dart';
 import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:talker/talker.dart';

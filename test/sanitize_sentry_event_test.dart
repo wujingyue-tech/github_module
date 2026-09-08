@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/logging/sanitize_sentry_event.dart';
+import 'package:learn_flutter/core/crash_reporting/sentry/sanitize_sentry_event.dart';
 import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -60,6 +60,8 @@ void main() {
     expect(out.breadcrumbs!.single.message, isNot(contains('github_pat_')));
     expect(out.breadcrumbs!.single.data!['Authorization'], contains('[redacted]'));
     expect(out.tags!['note'], '[redacted]');
+    // ignore: deprecated_member_use
+    expect(out.extra, isNull);
     expect(hint.screenshot, isNull);
     expect(hint.response, isNull);
   });

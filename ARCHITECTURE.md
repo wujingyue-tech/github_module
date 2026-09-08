@@ -8,6 +8,8 @@ This project is a Flutter template using **feature-first** layout and thin domai
 lib/
   app/           bootstrap, router, composition root (DI), debug preview
   core/          shared kernel — must not import features
+    logging/     AppLog, Talker, dump
+    crash_reporting/  CrashPolicy + CrashReporter; sentry/ is the vendor adapter
   features/      one folder per business capability
     */domain/    entities and repository interfaces
     */data/      remotes, DTOs, stores, repository implementations
@@ -43,13 +45,14 @@ core         → (nothing in features)
 | `SessionNotifier` / `SettingsNotifier` | Auth vs settings state + restore | Open prefs / Keychain |
 | `dioProvider` | Assemble Dio + interceptors | `ref.watch` session inside interceptors |
 | `AppLog` / `TalkerAppLog` | Console + in-app log history | Pages calling Talker / `print` |
-| `CrashReporter` / `SentryCrashReporter` | Unexpected errors via `AppLog.report` | Debug/info logs, dump button, tokens, PII |
+| `CrashReporter` / `CrashPolicy` | What to upload (id only, no tokens) | Vendor option names |
+| `sentry/` adapter | Map policy onto sentry_flutter | Pages importing `sentry_flutter` |
 | `LogDump` / `HttpLogDump` | Export + POST diagnostic dump | Using `dioProvider` (would log the dump) |
 | `DioCacheInterceptor` | Browser-like GET cache from HTTP headers | Custom `refresh` / `noCache` flags or per-call `CacheOptions` |
 
 ## Startup
 
-`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported through `AppLog` and ignored so the app still starts logged-out with default settings. `FlutterError.onError` and `PlatformDispatcher.instance.onError` also go to `AppLog`. If `SENTRY_DSN` is set, `AppLog.report` also sends to Sentry (self-hosted or sentry.io); empty DSN is a no-op. Sentry events include exception, stack, `source` tag, release, environment, and GitHub login as user id — not PATs, request bodies, screenshots, or debug logs. App version comes only from `pubspec.yaml` (`YYYY.MINOR.PATCH+build`, Android Studio style) and is injected via `PackageInfo` at startup; do not duplicate it in Dart, Gradle, or Info.plist. Debug builds show a floating button that opens the full `/logs` page; release builds unlock the same page by double-tapping the version on Settings, holding 10 seconds, then double-tapping again. Upload goes through `LogDump` (not the GitHub Dio) to `LOG_DUMP_URL`.
+`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported through `AppLog` and ignored so the app still starts logged-out with default settings. `FlutterError.onError` and `PlatformDispatcher.instance.onError` also go to `AppLog`. If `SENTRY_DSN` is set, `AppLog.report` also sends through `CrashReporter` (Sentry adapter). Empty DSN is a no-op. What may be sent is defined in `CrashPolicy` (exception, stack, `source` tag, release, environment, GitHub login as user id — not PATs, request bodies, screenshots, or debug logs). Vendor flags live only under `lib/core/crash_reporting/sentry/`. App version comes only from `pubspec.yaml` (`YYYY.MINOR.PATCH+build`, Android Studio style) and is injected via `PackageInfo` at startup; do not duplicate it in Dart, Gradle, or Info.plist. Debug builds show a floating button that opens the full `/logs` page; release builds unlock the same page by double-tapping the version on Settings, holding 10 seconds, then double-tapping again. Upload goes through `LogDump` (not the GitHub Dio) to `LOG_DUMP_URL`.
 
 ## Configuration
 

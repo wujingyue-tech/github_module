@@ -1,4 +1,7 @@
 /// Remote crash sink. Empty DSN uses [NoOpCrashReporter].
+///
+/// Implementations live under `sentry/`. Pages and `AppLog` must not import
+/// the vendor SDK.
 abstract interface class CrashReporter {
   void capture(Object error, [StackTrace? stackTrace, String? hint]);
 

@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/bootstrap.dart';
 import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/core/logging/crash_reporter.dart';
+import 'package:learn_flutter/core/crash_reporting/crash_reporter.dart';
 import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
 import 'package:learn_flutter/features/session/domain/app_settings.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';

@@ -6,7 +6,7 @@ import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/app/error_hooks.dart';
 import 'package:learn_flutter/app/preview.dart';
 import 'package:learn_flutter/core/app_info.dart';
-import 'package:learn_flutter/core/logging/init_sentry.dart';
+import 'package:learn_flutter/core/crash_reporting/sentry/init_sentry.dart';
 import 'package:learn_flutter/core/network/app_config.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';

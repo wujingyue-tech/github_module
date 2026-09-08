@@ -1,29 +1,34 @@
-import 'package:learn_flutter/core/logging/sanitize_log_dump.dart';
-import 'package:learn_flutter/core/logging/should_report.dart';
+import 'package:learn_flutter/core/crash_reporting/crash_policy.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-/// Last-chance filter: drop expected errors, strip tokens / PII / bodies.
+/// Last-chance map of [CrashPolicy] onto a Sentry event.
 SentryEvent? sanitizeSentryEvent(SentryEvent event, Hint hint) {
   final throwable = event.throwable;
-  if (throwable is Object && !shouldReport(throwable)) {
+  if (throwable is Object && !CrashPolicy.shouldUpload(throwable)) {
     return null;
   }
 
-  hint.screenshot = null;
-  hint.viewHierarchy = null;
+  if (!CrashPolicy.sendScreenshots) {
+    hint.screenshot = null;
+    hint.attachments.clear();
+  }
+  if (!CrashPolicy.sendViewHierarchy) {
+    hint.viewHierarchy = null;
+  }
   hint.response = null;
-  hint.attachments.clear();
 
   event.serverName = null;
   event.request = _stripRequest(event.request);
   event.user = _stripUser(event.user);
+  // ignore: deprecated_member_use
+  event.extra = null;
 
   final message = event.message;
   if (message != null) {
-    message.formatted = sanitizeLogDump(message.formatted);
+    message.formatted = CrashPolicy.redact(message.formatted);
     final template = message.template;
     if (template != null) {
-      message.template = sanitizeLogDump(template);
+      message.template = CrashPolicy.redact(template);
     }
   }
 
@@ -32,7 +37,7 @@ SentryEvent? sanitizeSentryEvent(SentryEvent event, Hint hint) {
     for (final exception in exceptions) {
       final value = exception.value;
       if (value != null) {
-        exception.value = sanitizeLogDump(value);
+        exception.value = CrashPolicy.redact(value);
       }
     }
   }
@@ -42,28 +47,17 @@ SentryEvent? sanitizeSentryEvent(SentryEvent event, Hint hint) {
     for (final crumb in breadcrumbs) {
       final crumbMessage = crumb.message;
       if (crumbMessage != null) {
-        crumb.message = sanitizeLogDump(crumbMessage);
+        crumb.message = CrashPolicy.redact(crumbMessage);
       }
-      crumb.data = _sanitizeMap(crumb.data);
+      crumb.data = _redactMap(crumb.data);
     }
   }
 
   final tags = event.tags;
   if (tags != null) {
     event.tags = {
-      for (final entry in tags.entries) entry.key: sanitizeLogDump(entry.value),
+      for (final entry in tags.entries) entry.key: CrashPolicy.redact(entry.value),
     };
-  }
-
-  // ignore: deprecated_member_use
-  final extra = event.extra;
-  if (extra != null) {
-    for (final key in extra.keys.toList()) {
-      final value = extra[key];
-      if (value is String) {
-        extra[key] = sanitizeLogDump(value);
-      }
-    }
   }
 
   return event;
@@ -77,16 +71,23 @@ SentryUser? _stripUser(SentryUser? user) {
 
 SentryRequest? _stripRequest(SentryRequest? request) {
   if (request == null) return null;
-  return SentryRequest(url: request.url, method: request.method);
+  if (!CrashPolicy.sendRequestUrlAndMethod) return null;
+  return SentryRequest(
+    url: request.url,
+    method: request.method,
+    headers: CrashPolicy.sendRequestHeaders ? request.headers : null,
+    cookies: CrashPolicy.sendRequestCookies ? request.cookies : null,
+    data: CrashPolicy.sendRequestBodies ? request.data : null,
+  );
 }
 
-Map<String, dynamic>? _sanitizeMap(Map<String, dynamic>? data) {
+Map<String, dynamic>? _redactMap(Map<String, dynamic>? data) {
   if (data == null) return null;
   return {
     for (final entry in data.entries)
       entry.key: switch (entry.value) {
-        final String value => sanitizeLogDump(value),
-        final Map<String, dynamic> nested => _sanitizeMap(nested),
+        final String value => CrashPolicy.redact(value),
+        final Map<String, dynamic> nested => _redactMap(nested),
         final value => value,
       },
   };
