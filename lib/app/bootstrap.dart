@@ -5,6 +5,7 @@ import 'package:learn_flutter/app/app.dart';
 import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/app/error_hooks.dart';
 import 'package:learn_flutter/app/preview.dart';
+import 'package:learn_flutter/core/analytics/posthog/init_posthog.dart';
 import 'package:learn_flutter/core/app_info.dart';
 import 'package:learn_flutter/core/crash_reporting/sentry/init_sentry.dart';
 import 'package:learn_flutter/core/network/app_config.dart';
@@ -30,6 +31,10 @@ Future<void> bootstrap() async {
         '${packageInfo.packageName}@${packageInfo.version}+${packageInfo.buildNumber}',
     dist: packageInfo.buildNumber,
   );
+  await initPosthog(
+    apiKey: config.posthogApiKey,
+    host: config.posthogHost,
+  );
   final talker = TalkerFlutter.init(logger: TalkerLogger(output: debugPrint));
   final container = ProviderContainer(
     retry: kDebugMode && appPreview != AppPreview.off ? (_, _) => null : null,
@@ -54,6 +59,12 @@ Future<void> bootstrap() async {
     },
   );
   bindCrashReporterUser(container);
+  bindAnalyticsUser(container);
+  log.info(
+    config.posthogApiKey.isEmpty
+        ? 'analytics: disabled (empty POSTHOG_API_KEY)'
+        : 'analytics: posthog ready',
+  );
   runApp(
     UncontrolledProviderScope(container: container, child: const MainApp()),
   );
@@ -63,6 +74,22 @@ Future<void> bootstrap() async {
 void bindCrashReporterUser(ProviderContainer container) {
   container.listen<AuthSession>(sessionProvider, (_, next) {
     container.read(crashReporterProvider).setUser(id: next.user?.login);
+  }, fireImmediately: true);
+}
+
+/// Keeps PostHog's distinct id in sync with the GitHub login. Never sends the PAT.
+///
+/// A cold start while logged out must not call [AppAnalytics.reset] — that
+/// races the first `$screen` and can wipe the install-verification event.
+void bindAnalyticsUser(ProviderContainer container) {
+  container.listen<AuthSession>(sessionProvider, (prev, next) {
+    final analytics = container.read(appAnalyticsProvider);
+    final id = next.user?.login;
+    if (id != null && id.isNotEmpty) {
+      analytics.identify(id: id);
+    } else if (prev?.user?.login != null) {
+      analytics.reset();
+    }
   }, fireImmediately: true);
 }
 

@@ -41,6 +41,17 @@ void main() {
     expect(config.sentryDsn, 'https://key@sentry.example/1');
   });
 
+  test('POSTHOG_API_KEY is attached without changing the API host', () {
+    final config = AppConfig.resolve(
+      posthogApiKey: 'phc_test',
+      posthogHost: 'https://eu.i.posthog.com',
+    );
+    expect(config.env, AppEnv.github);
+    expect(config.baseUrl, 'https://api.github.com/');
+    expect(config.posthogApiKey, 'phc_test');
+    expect(config.posthogHost, 'https://eu.i.posthog.com');
+  });
+
   test('unknown APP_ENV falls back to GitHub', () {
     expect(AppConfig.resolve(envName: 'staging').env, AppEnv.github);
   });

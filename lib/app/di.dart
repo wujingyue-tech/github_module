@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/core/app_info.dart';
+import 'package:learn_flutter/core/analytics/app_analytics.dart';
+import 'package:learn_flutter/core/analytics/posthog/posthog_app_analytics.dart';
 import 'package:learn_flutter/core/crash_reporting/crash_reporter.dart';
 import 'package:learn_flutter/core/crash_reporting/sentry/sentry_crash_reporter.dart';
 import 'package:learn_flutter/core/logging/app_log.dart';
@@ -31,6 +33,13 @@ final crashReporterProvider = Provider<CrashReporter>((ref) {
     return const NoOpCrashReporter();
   }
   return SentryCrashReporter();
+});
+
+final appAnalyticsProvider = Provider<AppAnalytics>((ref) {
+  if (ref.watch(appConfigProvider).posthogApiKey.isEmpty) {
+    return const NoOpAppAnalytics();
+  }
+  return PosthogAppAnalytics();
 });
 
 final appLogProvider = Provider<AppLog>((ref) {

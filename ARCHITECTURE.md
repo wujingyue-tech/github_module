@@ -10,6 +10,7 @@ lib/
   core/          shared kernel — must not import features
     logging/     AppLog, Talker, dump
     crash_reporting/  CrashPolicy + CrashReporter; sentry/ is the vendor adapter
+    analytics/        AnalyticsPolicy + AppAnalytics; posthog/ is the vendor adapter
   features/      one folder per business capability
     */domain/    entities and repository interfaces
     */data/      remotes, DTOs, stores, repository implementations
@@ -47,12 +48,14 @@ core         → (nothing in features)
 | `AppLog` / `TalkerAppLog` | Console + in-app log history | Pages calling Talker / `print` |
 | `CrashReporter` / `CrashPolicy` | What to upload (id only, no tokens) | Vendor option names |
 | `sentry/` adapter | Map policy onto sentry_flutter | Pages importing `sentry_flutter` |
+| `AppAnalytics` / `AnalyticsPolicy` | screen / login / logout; GitHub login as user id | Autocapture, replay, HTTP events |
+| `posthog/` adapter | Map policy onto posthog_flutter | Pages importing `posthog_flutter` |
 | `LogDump` / `HttpLogDump` | Export + POST diagnostic dump | Using `dioProvider` (would log the dump) |
 | `DioCacheInterceptor` | Browser-like GET cache from HTTP headers | Custom `refresh` / `noCache` flags or per-call `CacheOptions` |
 
 ## Startup
 
-`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported through `AppLog` and ignored so the app still starts logged-out with default settings. `FlutterError.onError` and `PlatformDispatcher.instance.onError` also go to `AppLog`. If `SENTRY_DSN` is set, `AppLog.report` also sends through `CrashReporter` (Sentry adapter). Empty DSN is a no-op. What may be sent is defined in `CrashPolicy` (exception, stack, `source` tag, release, environment, GitHub login as user id — not PATs, request bodies, screenshots, or debug logs). Vendor flags live only under `lib/core/crash_reporting/sentry/`. App version comes only from `pubspec.yaml` (`YYYY.MINOR.PATCH+build`, Android Studio style) and is injected via `PackageInfo` at startup; do not duplicate it in Dart, Gradle, or Info.plist. Debug builds show a floating button that opens the full `/logs` page; release builds unlock the same page by double-tapping the version on Settings, holding 10 seconds, then double-tapping again. Upload goes through `LogDump` (not the GitHub Dio) to `LOG_DUMP_URL`.
+`bootstrap()` creates a `ProviderContainer`, restores auth and settings, then calls `runApp` with `UncontrolledProviderScope`. The container lives for the process. Restore failures are reported through `AppLog` and ignored so the app still starts logged-out with default settings. `FlutterError.onError` and `PlatformDispatcher.instance.onError` also go to `AppLog`. If `SENTRY_DSN` is set, `AppLog.report` also sends through `CrashReporter` (Sentry adapter). Empty DSN is a no-op. What may be sent is defined in `CrashPolicy` (exception, stack, `source` tag, release, environment, GitHub login as user id — not PATs, request bodies, screenshots, or debug logs). Vendor flags live only under `lib/core/crash_reporting/sentry/`. If `POSTHOG_API_KEY` is set, `AppAnalytics` uses the PostHog adapter; empty key is a no-op. Screens come from the GoRouter path (`/login`, `/settings`, `/repos`, `/profile` — not `/logs`). Login success/failure/logout are captured in `AuthNotifier`. Identify uses GitHub login only. Autocapture, session replay, surveys, feature flags, lifecycle events, and exception tracking stay off (`AnalyticsPolicy`); crashes stay on Sentry. Debug flushes each event; release batches 20 / 30s and flushes when the app backgrounds (`AnalyticsLifecycle`). Vendor flags live only under `lib/core/analytics/posthog/`. App version comes only from `pubspec.yaml` (`YYYY.MINOR.PATCH+build`, Android Studio style) and is injected via `PackageInfo` at startup; do not duplicate it in Dart, Gradle, or Info.plist. Debug builds show a floating button that opens the full `/logs` page; release builds unlock the same page by double-tapping the version on Settings, holding 10 seconds, then double-tapping again. Upload goes through `LogDump` (not the GitHub Dio) to `LOG_DUMP_URL`.
 
 ## Configuration
 
@@ -62,6 +65,7 @@ core         → (nothing in features)
 flutter run --dart-define=APP_ENV=sandbox
 flutter run --dart-define=APP_ENV=sandbox --dart-define=API_BASE_URL=http://10.0.2.2:8080/
 flutter run --dart-define=SENTRY_DSN=https://key@sentry.example/1
+flutter run --dart-define=POSTHOG_API_KEY=phc_... --dart-define=POSTHOG_HOST=https://us.i.posthog.com
 ```
 
 Needs a full restart (not hot reload). `MqttConfig` / `BleConfig` stay separate when those channels appear.

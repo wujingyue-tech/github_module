@@ -23,7 +23,7 @@ migrate_working_dir/
 # is commented out by default.
 #.vscode/
 
-# Local dart-defines (Sentry DSN, etc). Copy from .dart_defines.json.example.
+# Local dart-defines (Sentry DSN, PostHog key, etc). Copy from .dart_defines.json.example.
 .dart_defines.json
 
 # Flutter/Dart/Pub related

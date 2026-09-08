@@ -138,7 +138,7 @@ Release 不会挂这些 override。看完改回 `AppPreview.off`。
 | 超时、主题、通用错误、`RequestCancel` | `core/` | 把某个业务的 `Issue` 塞进来 |
 | 取消进行中的请求 | `RequestCancel` + `ref.onDispose` | 把 Dio `CancelToken` 写进 domain；取消后当成失败页 |
 | HTTP 环境 | `AppConfig.resolve()` / `appConfigProvider` | 改 `AppConfig.github` 的地址来指向假后端 |
-| 日志 / 上报 | `AppLog` / `LogDump` / `CrashReporter` | 页面里 `print` / `Talker()` / `Sentry.captureException`；把 token 打进日志；用 `dioProvider` 上传 dump |
+| 日志 / 上报 | `AppLog` / `LogDump` / `CrashReporter` / `AppAnalytics` | 页面里 `print` / `Talker()` / `Sentry.captureException` / `Posthog().capture`；把 token 打进日志或分析属性；用 `dioProvider` 上传 dump |
 
 跨 feature 只走两条路：对方的 **domain 类型**（例如 Issues 用 `User`），或 **`app/di.dart` 里的 provider**。
 
@@ -253,6 +253,6 @@ lib/features/device/
 1. **连接态**：`disconnected / connecting / connected / reconnecting`，用 provider 暴露，多个页面共享
 2. **Stream 而不是一次性 Future**：推送用 `StreamProvider` 或 Notifier 订阅 Repository 的 `Stream`
 3. **权限与平台通道**：蓝牙、后台保活、iOS 的 Background Modes
-4. **独立配置**：`MqttConfig` / `BleConfig` 与 `AppConfig` 并列，不要把 broker 地址写进 `AppConfig.github`。HTTP 换环境用 `--dart-define=APP_ENV=sandbox` 或 `API_BASE_URL`，不要改 `github` 常量。Sentry 用 `--dart-define=SENTRY_DSN=...`，不要把 DSN 写进代码。
+4. **独立配置**：`MqttConfig` / `BleConfig` 与 `AppConfig` 并列，不要把 broker 地址写进 `AppConfig.github`。HTTP 换环境用 `--dart-define=APP_ENV=sandbox` 或 `API_BASE_URL`，不要改 `github` 常量。Sentry 用 `--dart-define=SENTRY_DSN=...`，PostHog 用 `--dart-define=POSTHOG_API_KEY=...`，不要把密钥写进代码。
 
 先做 HTTP 业务时不必提前引入 MQTT 包。第一条真连接出现时，再加 `core/mqtt` 或 `core/ble` 即可。

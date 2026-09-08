@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_flutter/app/analytics_lifecycle.dart';
 import 'package:learn_flutter/app/log_console_host.dart';
 import 'package:learn_flutter/app/router.dart';
 import 'package:learn_flutter/core/theme/app_themes.dart';
@@ -45,9 +46,11 @@ class MainApp extends ConsumerWidget {
       ),
       routerConfig: router,
       builder: (context, child) {
-        return LogConsoleHost(
-          router: router,
-          child: child ?? const SizedBox.shrink(),
+        return AnalyticsLifecycle(
+          child: LogConsoleHost(
+            router: router,
+            child: child ?? const SizedBox.shrink(),
+          ),
         );
       },
     );

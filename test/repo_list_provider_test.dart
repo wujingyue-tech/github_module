@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/core/analytics/analytics_policy.dart';
 import 'package:learn_flutter/core/error/app_exception.dart';
 import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 import 'package:learn_flutter/features/repos/presentation/repo_list_provider.dart';
+
+import 'support/fake_app_analytics.dart';
 
 class _FailingLoadMoreRepository implements RepoRepository {
   @override
@@ -37,9 +40,11 @@ void main() {
   });
 
   test('loadMore keeps items and stores the error on the list state', () async {
+    final analytics = FakeAppAnalytics();
     final container = ProviderContainer(
       overrides: [
         repoRepositoryProvider.overrideWithValue(_FailingLoadMoreRepository()),
+        appAnalyticsProvider.overrideWithValue(analytics),
       ],
     );
     addTearDown(container.dispose);
@@ -53,12 +58,41 @@ void main() {
     expect(state.items, hasLength(RepoRepository.pageSize));
     expect(state.hasMore, isTrue);
     expect((state.loadMoreError! as AppException).code, AppErrorCode.failed);
+    expect(analytics.events.single.name, AnalyticsPolicy.repoLoadMoreFailure);
+    expect(analytics.events.single.properties, {
+      'page': 2,
+      'reason': AppErrorCode.failed.name,
+    });
+  });
+
+  test('loadMore records page and has_more on success', () async {
+    final analytics = FakeAppAnalytics();
+    final container = ProviderContainer(
+      overrides: [
+        repoRepositoryProvider.overrideWithValue(FakeRepoRepository.hasMore()),
+        appAnalyticsProvider.overrideWithValue(analytics),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(repoListProvider.future);
+    await container.read(repoListProvider.notifier).loadMore();
+
+    expect(analytics.events.single.name, AnalyticsPolicy.repoLoadMore);
+    expect(analytics.events.single.properties, {
+      'page': 2,
+      'has_more': true,
+    });
   });
 
   test('loadMore does not auto-retry while the footer error is set', () async {
     final repo = _CountingFailingLoadMoreRepository();
+    final analytics = FakeAppAnalytics();
     final container = ProviderContainer(
-      overrides: [repoRepositoryProvider.overrideWithValue(repo)],
+      overrides: [
+        repoRepositoryProvider.overrideWithValue(repo),
+        appAnalyticsProvider.overrideWithValue(analytics),
+      ],
     );
     addTearDown(container.dispose);
 
@@ -71,6 +105,8 @@ void main() {
       container.read(repoListProvider).requireValue.loadMoreError,
       isNotNull,
     );
+    expect(analytics.events, hasLength(1));
+    expect(analytics.events.single.name, AnalyticsPolicy.repoLoadMoreFailure);
   });
 
   test('retryLoadMore appends the next page after a failure', () async {

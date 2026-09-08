@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/core/analytics/analytics_policy.dart';
+import 'package:learn_flutter/core/error/app_exception.dart';
 import 'package:learn_flutter/core/request_cancel.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
@@ -93,21 +95,31 @@ class RepoListNotifier extends AsyncNotifier<RepoListState> {
       return;
     }
     _loadingMore = true;
+    final analytics = ref.read(appAnalyticsProvider);
+    final nextPage = current.page + 1;
     try {
-      final nextPage = current.page + 1;
       final more = await _repo.listRepos(page: nextPage, cancel: _cancel);
+      final hasMore = more.length >= RepoRepository.pageSize;
       state = AsyncData(
         current.copyWith(
           items: [...current.items, ...more],
           page: nextPage,
-          hasMore: more.length >= RepoRepository.pageSize,
+          hasMore: hasMore,
           clearLoadMoreError: true,
         ),
       );
+      await analytics.event(AnalyticsPolicy.repoLoadMore, {
+        'page': nextPage,
+        'has_more': hasMore,
+      });
     } on RequestCancelledException {
       return;
     } catch (error) {
       state = AsyncData(current.copyWith(loadMoreError: error));
+      await analytics.event(AnalyticsPolicy.repoLoadMoreFailure, {
+        'page': nextPage,
+        'reason': _loadMoreFailureReason(error),
+      });
     } finally {
       _loadingMore = false;
     }
@@ -125,3 +137,8 @@ final repoListProvider =
     AsyncNotifierProvider.autoDispose<RepoListNotifier, RepoListState>(
       RepoListNotifier.new,
     );
+
+String _loadMoreFailureReason(Object error) {
+  if (error is AppException) return error.code.name;
+  return AppErrorCode.failed.name;
+}

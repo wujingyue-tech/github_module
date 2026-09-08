@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/app/log_console_provider.dart';
 import 'package:learn_flutter/app/log_viewer_page.dart';
+import 'package:learn_flutter/core/analytics/app_analytics.dart';
 import 'package:learn_flutter/features/auth/presentation/login_page.dart';
 import 'package:learn_flutter/features/auth/presentation/profile_page.dart';
 import 'package:learn_flutter/features/repos/presentation/app_shell.dart';
@@ -25,7 +29,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   final refresh = _AuthRefresh(ref);
   ref.onDispose(refresh.dispose);
 
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: '/repos',
     refreshListenable: refresh,
     redirect: (context, state) {
@@ -77,4 +81,21 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
+  _bindAnalyticsScreens(router, ref.read(appAnalyticsProvider));
+  return router;
 });
+
+void _bindAnalyticsScreens(GoRouter router, AppAnalytics analytics) {
+  var last = '';
+  void emit() {
+    final matches = router.routerDelegate.currentConfiguration;
+    if (matches.isEmpty) return;
+    final path = router.state.matchedLocation;
+    if (path.isEmpty || path == last) return;
+    last = path;
+    analytics.screen(path);
+  }
+
+  router.routerDelegate.addListener(emit);
+  scheduleMicrotask(emit);
+}

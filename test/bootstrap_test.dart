@@ -11,6 +11,8 @@ import 'package:learn_flutter/features/session/domain/settings_store.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
 
+import 'support/fake_app_analytics.dart';
+
 class _ThrowingAuthStore implements AuthStore {
   @override
   Future<AuthSession> load() async => throw StateError('keychain');
@@ -126,6 +128,49 @@ void main() {
 
     await container.read(sessionProvider.notifier).clearAuth();
     expect(reporter.userId, isNull);
+  });
+
+  test('bindAnalyticsUser tracks GitHub login and resets on logout', () async {
+    final analytics = FakeAppAnalytics();
+    final store = _MemoryAuthStore(
+      const AuthSession(token: 'tok', user: previewUser),
+    );
+    final container = ProviderContainer(
+      overrides: [
+        appAnalyticsProvider.overrideWithValue(analytics),
+        authStoreProvider.overrideWithValue(store),
+        settingsStoreProvider.overrideWithValue(
+          _MemorySettingsStore(const AppSettings()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    bindAnalyticsUser(container);
+    await container.read(sessionProvider.notifier).restore();
+    expect(analytics.userId, 'octocat');
+
+    await container.read(sessionProvider.notifier).clearAuth();
+    expect(analytics.userId, isNull);
+    expect(analytics.resetCount, greaterThan(0));
+  });
+
+  test('bindAnalyticsUser does not reset a cold logged-out start', () async {
+    final analytics = FakeAppAnalytics();
+    final container = ProviderContainer(
+      overrides: [
+        appAnalyticsProvider.overrideWithValue(analytics),
+        authStoreProvider.overrideWithValue(_MemoryAuthStore(const AuthSession())),
+        settingsStoreProvider.overrideWithValue(
+          _MemorySettingsStore(const AppSettings()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    bindAnalyticsUser(container);
+    expect(analytics.identifies, isEmpty);
+    expect(analytics.resetCount, 0);
   });
 }
 

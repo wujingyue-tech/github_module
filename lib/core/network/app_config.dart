@@ -9,6 +9,8 @@ class AppConfig {
     this.apiVersion = '2022-11-28',
     this.logDumpUrl = '',
     this.sentryDsn = '',
+    this.posthogApiKey = '',
+    this.posthogHost = '',
   });
 
   final AppEnv env;
@@ -24,6 +26,14 @@ class AppConfig {
   /// Sentry DSN (sentry.io, self-hosted, or GlitchTip). Empty disables Sentry.
   /// Set with `--dart-define=SENTRY_DSN=https://...`.
   final String sentryDsn;
+
+  /// PostHog project API key. Empty disables product analytics.
+  /// Set with `--dart-define=POSTHOG_API_KEY=phc_...`.
+  final String posthogApiKey;
+
+  /// PostHog ingestion host. Empty uses the SDK default (US cloud).
+  /// EU: `https://eu.i.posthog.com`. Self-host: your public ingest URL.
+  final String posthogHost;
 
   static const github = AppConfig(
     env: AppEnv.github,
@@ -49,6 +59,8 @@ class AppConfig {
     String? apiVersion,
     String? logDumpUrl,
     String? sentryDsn,
+    String? posthogApiKey,
+    String? posthogHost,
   }) {
     return AppConfig(
       env: env ?? this.env,
@@ -58,6 +70,8 @@ class AppConfig {
       apiVersion: apiVersion ?? this.apiVersion,
       logDumpUrl: logDumpUrl ?? this.logDumpUrl,
       sentryDsn: sentryDsn ?? this.sentryDsn,
+      posthogApiKey: posthogApiKey ?? this.posthogApiKey,
+      posthogHost: posthogHost ?? this.posthogHost,
     );
   }
 
@@ -71,6 +85,8 @@ class AppConfig {
     String baseUrl = const String.fromEnvironment('API_BASE_URL'),
     String logDumpUrl = const String.fromEnvironment('LOG_DUMP_URL'),
     String sentryDsn = const String.fromEnvironment('SENTRY_DSN'),
+    String posthogApiKey = const String.fromEnvironment('POSTHOG_API_KEY'),
+    String posthogHost = const String.fromEnvironment('POSTHOG_HOST'),
   }) {
     final preset = switch (envName) {
       'sandbox' => sandbox,
@@ -83,6 +99,12 @@ class AppConfig {
     }
     if (sentryDsn.isNotEmpty) {
       config = config.copyWith(sentryDsn: sentryDsn);
+    }
+    if (posthogApiKey.isNotEmpty) {
+      config = config.copyWith(posthogApiKey: posthogApiKey);
+    }
+    if (posthogHost.isNotEmpty) {
+      config = config.copyWith(posthogHost: posthogHost);
     }
     return config;
   }
