@@ -8,6 +8,7 @@ import 'package:learn_flutter/app/preview.dart';
 import 'package:learn_flutter/core/analytics/posthog/init_posthog.dart';
 import 'package:learn_flutter/core/app_info.dart';
 import 'package:learn_flutter/core/crash_reporting/sentry/init_sentry.dart';
+import 'package:learn_flutter/core/logging/app_log.dart';
 import 'package:learn_flutter/core/network/app_config.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
@@ -57,12 +58,20 @@ Future<void> bootstrap() async {
   );
   bindCrashReporterUser(container);
   bindAnalyticsUser(container);
-  if (config.posthogApiKey.isEmpty) {
-    log.warn('analytics: disabled (empty POSTHOG_API_KEY)');
-  }
+  warnDisabledTelemetry(log, config);
   runApp(
     UncontrolledProviderScope(container: container, child: const MainApp()),
   );
+}
+
+/// One warn per empty sink. Init adapters stay silent so this can use [AppLog].
+void warnDisabledTelemetry(AppLog log, AppConfig config) {
+  if (config.sentryDsn.isEmpty) {
+    log.warn('crash reporting: disabled (empty SENTRY_DSN)');
+  }
+  if (config.posthogApiKey.isEmpty) {
+    log.warn('analytics: disabled (empty POSTHOG_API_KEY)');
+  }
 }
 
 /// Keeps Sentry's user id in sync with the GitHub login. Never sends the PAT.

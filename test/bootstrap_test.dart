@@ -4,6 +4,8 @@ import 'package:learn_flutter/app/bootstrap.dart';
 import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/app/store_providers.dart';
 import 'package:learn_flutter/core/crash_reporting/crash_reporter.dart';
+import 'package:learn_flutter/core/logging/app_log.dart';
+import 'package:learn_flutter/core/network/app_config.dart';
 import 'package:learn_flutter/features/auth/domain/sample_user.dart';
 import 'package:learn_flutter/features/session/domain/app_settings.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
@@ -186,6 +188,27 @@ void main() {
     expect(analytics.resetCount, 0);
     expect(analytics.identifies, [null, '']);
   });
+
+  test('empty Sentry DSN and PostHog key each warn once', () {
+    final log = _RecordingLog();
+    warnDisabledTelemetry(log, AppConfig.github);
+    expect(log.warnings, [
+      'crash reporting: disabled (empty SENTRY_DSN)',
+      'analytics: disabled (empty POSTHOG_API_KEY)',
+    ]);
+  });
+
+  test('configured sinks do not warn', () {
+    final log = _RecordingLog();
+    warnDisabledTelemetry(
+      log,
+      AppConfig.github.copyWith(
+        sentryDsn: 'https://key@sentry.example/1',
+        posthogApiKey: 'phc_test',
+      ),
+    );
+    expect(log.warnings, isEmpty);
+  });
 }
 
 class _RecordingCrashReporter implements CrashReporter {
@@ -198,4 +221,25 @@ class _RecordingCrashReporter implements CrashReporter {
   void setUser({String? id}) {
     userId = id;
   }
+}
+
+class _RecordingLog implements AppLog {
+  final warnings = <String>[];
+
+  @override
+  void debug(String message, {Object? error, StackTrace? stackTrace}) {}
+
+  @override
+  void info(String message, {Object? error, StackTrace? stackTrace}) {}
+
+  @override
+  void warn(String message, {Object? error, StackTrace? stackTrace}) {
+    warnings.add(message);
+  }
+
+  @override
+  void error(String message, {Object? error, StackTrace? stackTrace}) {}
+
+  @override
+  void report(Object error, [StackTrace? stackTrace, String? hint]) {}
 }
