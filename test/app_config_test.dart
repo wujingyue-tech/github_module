@@ -32,6 +32,15 @@ void main() {
     expect(config.logDumpUrl, 'https://dumps.example/upload');
   });
 
+  test('SENTRY_DSN is attached without changing the API host', () {
+    final config = AppConfig.resolve(
+      sentryDsn: 'https://key@sentry.example/1',
+    );
+    expect(config.env, AppEnv.github);
+    expect(config.baseUrl, 'https://api.github.com/');
+    expect(config.sentryDsn, 'https://key@sentry.example/1');
+  });
+
   test('unknown APP_ENV falls back to GitHub', () {
     expect(AppConfig.resolve(envName: 'staging').env, AppEnv.github);
   });

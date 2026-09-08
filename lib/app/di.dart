@@ -3,8 +3,10 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/core/app_info.dart';
 import 'package:learn_flutter/core/logging/app_log.dart';
+import 'package:learn_flutter/core/logging/crash_reporter.dart';
 import 'package:learn_flutter/core/logging/http_log_dump.dart';
 import 'package:learn_flutter/core/logging/log_dump.dart';
+import 'package:learn_flutter/core/logging/sentry_crash_reporter.dart';
 import 'package:learn_flutter/core/logging/talker_app_log.dart';
 import 'package:learn_flutter/core/network/app_config.dart';
 import 'package:learn_flutter/core/network/auth_interceptor.dart';
@@ -24,8 +26,18 @@ final talkerProvider = Provider<Talker>((ref) => Talker());
 
 final appInfoProvider = Provider<AppInfo>((ref) => AppInfo.unset);
 
+final crashReporterProvider = Provider<CrashReporter>((ref) {
+  if (ref.watch(appConfigProvider).sentryDsn.isEmpty) {
+    return const NoOpCrashReporter();
+  }
+  return SentryCrashReporter();
+});
+
 final appLogProvider = Provider<AppLog>((ref) {
-  return TalkerAppLog(ref.watch(talkerProvider));
+  return TalkerAppLog(
+    ref.watch(talkerProvider),
+    crashReporter: ref.watch(crashReporterProvider),
+  );
 });
 
 /// Dedicated client so uploading a dump is not logged by TalkerDioLogger.

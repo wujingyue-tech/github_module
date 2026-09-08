@@ -10,5 +10,6 @@ HTTP environment (full restart, not hot reload):
 ```text
 flutter run --dart-define=APP_ENV=sandbox
 flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080/
+flutter run --dart-define=SENTRY_DSN=https://key@sentry.example/1
 ```
 

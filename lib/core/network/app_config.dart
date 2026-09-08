@@ -8,6 +8,7 @@ class AppConfig {
     required this.receiveTimeout,
     this.apiVersion = '2022-11-28',
     this.logDumpUrl = '',
+    this.sentryDsn = '',
   });
 
   final AppEnv env;
@@ -19,6 +20,10 @@ class AppConfig {
   /// Absolute URL for diagnostic log upload. Empty means upload is disabled.
   /// Set with `--dart-define=LOG_DUMP_URL=https://...`.
   final String logDumpUrl;
+
+  /// Sentry DSN (sentry.io, self-hosted, or GlitchTip). Empty disables Sentry.
+  /// Set with `--dart-define=SENTRY_DSN=https://...`.
+  final String sentryDsn;
 
   static const github = AppConfig(
     env: AppEnv.github,
@@ -43,6 +48,7 @@ class AppConfig {
     Duration? receiveTimeout,
     String? apiVersion,
     String? logDumpUrl,
+    String? sentryDsn,
   }) {
     return AppConfig(
       env: env ?? this.env,
@@ -51,6 +57,7 @@ class AppConfig {
       receiveTimeout: receiveTimeout ?? this.receiveTimeout,
       apiVersion: apiVersion ?? this.apiVersion,
       logDumpUrl: logDumpUrl ?? this.logDumpUrl,
+      sentryDsn: sentryDsn ?? this.sentryDsn,
     );
   }
 
@@ -63,6 +70,7 @@ class AppConfig {
     ),
     String baseUrl = const String.fromEnvironment('API_BASE_URL'),
     String logDumpUrl = const String.fromEnvironment('LOG_DUMP_URL'),
+    String sentryDsn = const String.fromEnvironment('SENTRY_DSN'),
   }) {
     final preset = switch (envName) {
       'sandbox' => sandbox,
@@ -72,6 +80,9 @@ class AppConfig {
     if (baseUrl.isNotEmpty) config = config.copyWith(baseUrl: baseUrl);
     if (logDumpUrl.isNotEmpty) {
       config = config.copyWith(logDumpUrl: logDumpUrl);
+    }
+    if (sentryDsn.isNotEmpty) {
+      config = config.copyWith(sentryDsn: sentryDsn);
     }
     return config;
   }

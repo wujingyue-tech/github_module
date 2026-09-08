@@ -6,6 +6,9 @@ import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/app/error_hooks.dart';
 import 'package:learn_flutter/app/preview.dart';
 import 'package:learn_flutter/core/app_info.dart';
+import 'package:learn_flutter/core/logging/init_sentry.dart';
+import 'package:learn_flutter/core/network/app_config.dart';
+import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -19,11 +22,20 @@ import 'package:talker_flutter/talker_flutter.dart';
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   final packageInfo = await PackageInfo.fromPlatform();
+  final config = AppConfig.resolve();
+  await initSentry(
+    dsn: config.sentryDsn,
+    environment: config.env.name,
+    release:
+        '${packageInfo.packageName}@${packageInfo.version}+${packageInfo.buildNumber}',
+    dist: packageInfo.buildNumber,
+  );
   final talker = TalkerFlutter.init(logger: TalkerLogger(output: debugPrint));
   final container = ProviderContainer(
     retry: kDebugMode && appPreview != AppPreview.off ? (_, _) => null : null,
     overrides: [
       talkerProvider.overrideWithValue(talker),
+      appConfigProvider.overrideWithValue(config),
       appInfoProvider.overrideWithValue(
         AppInfo(
           version: packageInfo.version,
@@ -41,9 +53,17 @@ Future<void> bootstrap() async {
       log.report(error, stackTrace, 'startup restore');
     },
   );
+  bindCrashReporterUser(container);
   runApp(
     UncontrolledProviderScope(container: container, child: const MainApp()),
   );
+}
+
+/// Keeps Sentry's user id in sync with the GitHub login. Never sends the PAT.
+void bindCrashReporterUser(ProviderContainer container) {
+  container.listen<AuthSession>(sessionProvider, (_, next) {
+    container.read(crashReporterProvider).setUser(id: next.user?.login);
+  }, fireImmediately: true);
 }
 
 /// Restores session and settings independently. A failure in one does not

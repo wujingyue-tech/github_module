@@ -1,6 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/bootstrap.dart';
+import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/core/logging/crash_reporter.dart';
+import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
 import 'package:learn_flutter/features/session/domain/app_settings.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/domain/auth_store.dart';
@@ -100,4 +103,40 @@ void main() {
       expect(errors, hasLength(1));
     },
   );
+
+  test('bindCrashReporterUser tracks GitHub login and clears on logout', () async {
+    final reporter = _RecordingCrashReporter();
+    final store = _MemoryAuthStore(
+      const AuthSession(token: 'tok', user: previewUser),
+    );
+    final container = ProviderContainer(
+      overrides: [
+        crashReporterProvider.overrideWithValue(reporter),
+        authStoreProvider.overrideWithValue(store),
+        settingsStoreProvider.overrideWithValue(
+          _MemorySettingsStore(const AppSettings()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    bindCrashReporterUser(container);
+    await container.read(sessionProvider.notifier).restore();
+    expect(reporter.userId, 'octocat');
+
+    await container.read(sessionProvider.notifier).clearAuth();
+    expect(reporter.userId, isNull);
+  });
+}
+
+class _RecordingCrashReporter implements CrashReporter {
+  String? userId;
+
+  @override
+  void capture(Object error, [StackTrace? stackTrace, String? hint]) {}
+
+  @override
+  void setUser({String? id}) {
+    userId = id;
+  }
 }
