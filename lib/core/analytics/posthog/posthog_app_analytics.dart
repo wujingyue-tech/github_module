@@ -11,15 +11,12 @@ class PosthogAppAnalytics implements AppAnalytics {
 
   @override
   Future<void> event(String name, [Map<String, Object>? properties]) {
-    return Posthog().capture(
-      eventName: name,
-      properties: _redact(properties),
-    );
+    return Posthog().capture(eventName: name, properties: _redact(properties));
   }
 
   @override
   Future<void> identify({String? id}) {
-    if (id == null || id.isEmpty) return Posthog().reset();
+    if (id == null || id.isEmpty) return Future.value();
     return Posthog().identify(userId: id);
   }
 

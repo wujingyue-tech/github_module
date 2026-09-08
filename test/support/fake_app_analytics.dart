@@ -27,7 +27,6 @@ class FakeAppAnalytics implements AppAnalytics {
   @override
   Future<void> identify({String? id}) async {
     identifies.add(id);
-    if (id == null || id.isEmpty) resetCount++;
   }
 
   @override

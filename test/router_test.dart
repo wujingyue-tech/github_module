@@ -1,10 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/app/router.dart';
+import 'package:learn_flutter/app/store_providers.dart';
 import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
+import 'package:learn_flutter/features/auth/domain/sample_user.dart';
 import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 import 'package:learn_flutter/l10n/app_localizations_en.dart';
 
 import 'support/fake_app_analytics.dart';

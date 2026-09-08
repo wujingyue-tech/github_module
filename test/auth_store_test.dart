@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:learn_flutter/features/auth/data/user_dto.dart';
 import 'package:learn_flutter/features/auth/domain/user.dart';
 import 'package:learn_flutter/features/session/data/auth_store_impl.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
@@ -15,6 +16,8 @@ void main() {
 
   test('load is empty when nothing is stored', () async {
     final store = AuthStoreImpl(
+      encodeUser: UserDto.encode,
+      decodeUser: UserDto.tryDecode,
       prefs: await SharedPreferences.getInstance(),
       secure: const FlutterSecureStorage(),
     );
@@ -27,6 +30,8 @@ void main() {
 
   test('save keeps token in secure storage only', () async {
     final store = AuthStoreImpl(
+      encodeUser: UserDto.encode,
+      decodeUser: UserDto.tryDecode,
       prefs: await SharedPreferences.getInstance(),
       secure: const FlutterSecureStorage(),
     );

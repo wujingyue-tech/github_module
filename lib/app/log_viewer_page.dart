@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/core/logging/debug_log_view.dart';
 import 'package:learn_flutter/l10n/app_localizations.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 class LogViewerPage extends ConsumerWidget {
   const LogViewerPage({super.key});
@@ -11,13 +11,10 @@ class LogViewerPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      body: TalkerView(
+      body: DebugLogView(
         talker: ref.watch(talkerProvider),
-        theme: TalkerScreenTheme.fromTheme(Theme.of(context)),
-        appBarTitle: l10n.debugLogs,
-        appBarLeading: BackButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
+        title: l10n.debugLogs,
+        leading: BackButton(onPressed: () => Navigator.of(context).maybePop()),
       ),
     );
   }

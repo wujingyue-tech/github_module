@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:learn_flutter/core/error/app_exception.dart';
 import 'package:learn_flutter/core/request_cancel.dart';
-import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
+import 'package:learn_flutter/features/auth/domain/sample_user.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
 
@@ -11,7 +11,7 @@ Repo sampleRepo(int id) {
     id: id,
     name: 'repo-$id',
     fullName: 'octocat/repo-$id',
-    owner: previewUser,
+    owner: previewUserRef,
     private: false,
     fork: false,
     forksCount: 1,

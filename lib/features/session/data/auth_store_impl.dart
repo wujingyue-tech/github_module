@@ -1,18 +1,22 @@
-import 'dart:convert';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:learn_flutter/features/auth/data/user_dto.dart';
 import 'package:learn_flutter/features/auth/domain/user.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/domain/auth_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthStoreImpl implements AuthStore {
-  AuthStoreImpl({this._prefs, FlutterSecureStorage? secure})
-    : _secure = secure ?? const FlutterSecureStorage();
+  AuthStoreImpl({
+    required this.encodeUser,
+    required this.decodeUser,
+    this._prefs,
+    FlutterSecureStorage? secure,
+  }) : _secure = secure ?? const FlutterSecureStorage();
 
   static const userKey = 'auth_user';
   static const tokenKey = 'github_token';
+
+  final String Function(User user) encodeUser;
+  final User? Function(String raw) decodeUser;
 
   SharedPreferences? _prefs;
   final FlutterSecureStorage _secure;
@@ -24,9 +28,10 @@ class AuthStoreImpl implements AuthStore {
   @override
   Future<AuthSession> load() async {
     final prefs = await _ensurePrefs();
+    final raw = prefs.getString(userKey);
     return AuthSession(
       token: await _secure.read(key: tokenKey),
-      user: _userFromRaw(prefs.getString(userKey)),
+      user: raw == null ? null : decodeUser(raw),
     );
   }
 
@@ -42,20 +47,7 @@ class AuthStoreImpl implements AuthStore {
     if (session.user == null) {
       await prefs.remove(userKey);
     } else {
-      await prefs.setString(
-        userKey,
-        jsonEncode(UserDto.fromDomain(session.user!).toJson()),
-      );
-    }
-  }
-
-  static User? _userFromRaw(String? raw) {
-    if (raw == null) return null;
-    try {
-      return UserDto.fromJson(jsonDecode(raw) as Map<String, dynamic>)
-          .toDomain();
-    } catch (_) {
-      return null;
+      await prefs.setString(userKey, encodeUser(session.user!));
     }
   }
 }

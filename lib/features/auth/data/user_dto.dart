@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:learn_flutter/features/auth/domain/user.dart';
 
 class UserDto {
@@ -102,6 +104,18 @@ class UserDto {
     'total_private_repos': totalPrivateRepos,
     'owned_private_repos': ownedPrivateRepos,
   };
+
+  static String encode(User user) =>
+      jsonEncode(UserDto.fromDomain(user).toJson());
+
+  static User? tryDecode(String raw) {
+    try {
+      return UserDto.fromJson(jsonDecode(raw) as Map<String, dynamic>)
+          .toDomain();
+    } catch (_) {
+      return null;
+    }
+  }
 
   User toDomain() {
     return User(

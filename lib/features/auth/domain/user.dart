@@ -1,3 +1,4 @@
+/// Signed-in GitHub profile (`GET /user`). Nested owners/authors use [UserRef].
 class User {
   const User({
     required this.login,

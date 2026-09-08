@@ -1,5 +1,5 @@
 name: learn_flutter
-description: "A new Flutter project."
+description: Flutter GitHub client used as a feature-first architecture template.
 publish_to: 'none'
 # YYYY.MINOR.PATCH+buildNumber — one value for iOS, Android, and the Settings UI.
 # Example: Android Studio Quail 4 is 2026.1.4. Bump PATCH for fixes, MINOR for features,

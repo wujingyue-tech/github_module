@@ -31,10 +31,7 @@ Future<void> bootstrap() async {
         '${packageInfo.packageName}@${packageInfo.version}+${packageInfo.buildNumber}',
     dist: packageInfo.buildNumber,
   );
-  await initPosthog(
-    apiKey: config.posthogApiKey,
-    host: config.posthogHost,
-  );
+  await initPosthog(apiKey: config.posthogApiKey, host: config.posthogHost);
   final talker = TalkerFlutter.init(logger: TalkerLogger(output: debugPrint));
   final container = ProviderContainer(
     retry: kDebugMode && appPreview != AppPreview.off ? (_, _) => null : null,

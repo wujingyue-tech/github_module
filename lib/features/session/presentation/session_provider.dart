@@ -1,10 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:learn_flutter/app/store_providers.dart';
 import 'package:learn_flutter/features/auth/domain/user.dart';
-import 'package:learn_flutter/features/session/data/auth_store_impl.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/domain/auth_store.dart';
-
-final authStoreProvider = Provider<AuthStore>((ref) => AuthStoreImpl());
 
 class SessionNotifier extends Notifier<AuthSession> {
   @override

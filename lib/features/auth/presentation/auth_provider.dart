@@ -18,10 +18,9 @@ class AuthNotifier extends AsyncNotifier<User?> {
         AppException(AppErrorCode.emptyToken),
         StackTrace.current,
       );
-      await ref.read(appAnalyticsProvider).event(
-        AnalyticsPolicy.loginFailure,
-        {'reason': AppErrorCode.emptyToken.name},
-      );
+      await ref.read(appAnalyticsProvider).event(AnalyticsPolicy.loginFailure, {
+        'reason': AppErrorCode.emptyToken.name,
+      });
       return;
     }
     state = const AsyncLoading();
@@ -39,10 +38,9 @@ class AuthNotifier extends AsyncNotifier<User?> {
     });
     final analytics = ref.read(appAnalyticsProvider);
     if (state.hasError) {
-      await analytics.event(
-        AnalyticsPolicy.loginFailure,
-        {'reason': _loginFailureReason(state.error!)},
-      );
+      await analytics.event(AnalyticsPolicy.loginFailure, {
+        'reason': _loginFailureReason(state.error!),
+      });
     } else if (state.value != null) {
       await analytics.event(AnalyticsPolicy.loginSuccess);
     }

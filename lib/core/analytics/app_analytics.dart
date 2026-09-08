@@ -6,8 +6,9 @@ abstract interface class AppAnalytics {
 
   Future<void> event(String name, [Map<String, Object>? properties]);
 
-  /// Sets the user id (GitHub login). Null or empty [id] calls [reset].
-  /// Never pass a token, email, or display name.
+  /// Sets the user id (GitHub login). Null or empty [id] is a no-op.
+  /// Logout calls [reset], never [identify]. Never pass a token, email, or
+  /// display name.
   Future<void> identify({String? id});
 
   Future<void> reset();

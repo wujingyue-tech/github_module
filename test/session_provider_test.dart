@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
+import 'package:learn_flutter/app/store_providers.dart';
+import 'package:learn_flutter/features/auth/domain/sample_user.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/domain/auth_store.dart';
 import 'package:learn_flutter/features/session/presentation/session_provider.dart';

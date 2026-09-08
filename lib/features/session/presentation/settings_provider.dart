@@ -1,11 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_flutter/features/session/data/settings_store_impl.dart';
+import 'package:learn_flutter/app/store_providers.dart';
 import 'package:learn_flutter/features/session/domain/app_settings.dart';
 import 'package:learn_flutter/features/session/domain/settings_store.dart';
-
-final settingsStoreProvider = Provider<SettingsStore>(
-  (ref) => SettingsStoreImpl(),
-);
 
 class SettingsNotifier extends Notifier<AppSettings> {
   @override

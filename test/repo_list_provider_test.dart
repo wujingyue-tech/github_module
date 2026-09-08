@@ -79,10 +79,7 @@ void main() {
     await container.read(repoListProvider.notifier).loadMore();
 
     expect(analytics.events.single.name, AnalyticsPolicy.repoLoadMore);
-    expect(analytics.events.single.properties, {
-      'page': 2,
-      'has_more': true,
-    });
+    expect(analytics.events.single.properties, {'page': 2, 'has_more': true});
   });
 
   test('loadMore does not auto-retry while the footer error is set', () async {

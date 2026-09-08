@@ -48,7 +48,8 @@ void _applyPolicy(SentryFlutterOptions options) {
 void _dropHooksAlreadyOwnedByAppLog(SentryFlutterOptions options) {
   for (final integration in List<Integration>.of(options.integrations)) {
     final name = integration.runtimeType.toString();
-    if (integration is OnErrorIntegration || name == 'FlutterErrorIntegration') {
+    if (integration is OnErrorIntegration ||
+        name == 'FlutterErrorIntegration') {
       options.removeIntegration(integration);
     }
   }

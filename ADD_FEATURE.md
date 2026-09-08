@@ -90,9 +90,11 @@ ref.read(sessionProvider).token
 ref.read(sessionProvider.notifier).clearAuth()
 ```
 
-不要 import `features/session/data/auth_store_impl.dart`。测登录时 override `authStoreProvider` 成内存实现，不要为了测 Notifier 去 mock `SharedPreferences`。
+不要 import `features/session/data/auth_store_impl.dart`。Store 的 default provider 在 `app/store_providers.dart`。测登录时 override `authStoreProvider` 成内存实现，不要为了测 Notifier 去 mock `SharedPreferences`。
 
-日志用 `ref.read(appLogProvider)`，不要在 Page 里 import `talker` 或 `sentry_flutter`。取消请求和空 token 不要 `report`。崩溃上报只走 `AppLog.report`（DSN 为空则不上报）。厂商 SDK 只放在 `lib/core/crash_reporting/sentry/`。
+日志用 `ref.read(appLogProvider)`，不要在 Page 里 import `talker`、`talker_flutter` 或 `sentry_flutter`。`/logs` 走 `DebugLogView`（`core/logging`）。取消请求和空 token 不要 `report`。崩溃上报只走 `AppLog.report`（DSN 为空则不上报）。厂商 SDK 只放在 `lib/core/crash_reporting/sentry/`。
+
+产品事件：名字写进 `AnalyticsPolicy`，只在 **Notifier** 里 `ref.read(appAnalyticsProvider).event(...)`。对照 `AuthNotifier` / `RepoListNotifier`。Page、Dio interceptor、不要 `Posthog().capture`。厂商 SDK 只放在 `lib/core/analytics/posthog/`。
 
 ## 6. 接到路由和文案
 
@@ -114,7 +116,7 @@ ref.read(sessionProvider.notifier).clearAuth()
 
 后端或蓝牙还没好、只想看空态 / 错误 / 满页时：假 **domain 端口**，不要假 Dio，也不要假 Notifier。
 
-1. 在该 feature 的 `data/` 写 `FakeXxxRepository`，实现同一个接口。对照 `features/repos/data/fake_repo_repository.dart`。
+1. 在该 feature 的 `data/` 写 `FakeXxxRepository`，实现同一个接口。对照 `features/repos/data/fake_repo_repository.dart`。需要示例资料用 `previewUser`，需要示例身份（owner）用 `previewUserRef`，都在 `features/auth/domain/sample_user.dart`。不要 import 别的 feature 的 `data/`。
 2. 在 `lib/app/preview.dart` 加一个 `AppPreview` 枚举值，并在 `previewOverrides()` 里 `overrideWithValue`。`bootstrap()` 只 spread 这一份列表，不用再改。`Override` 从 `package:flutter_riverpod/misc.dart` 导入，不要从主库找这个类型。
 3. 把 `appPreview` 改成那个值，**hot restart**（`ProviderContainer` 只在启动时建一次）。
 4. 需要登录的页，先用真登录走进去；预览只替换这一页用到的端口。
@@ -132,7 +134,7 @@ Release 不会挂这些 override。看完改回 `AppPreview.off`。
 | `Issue`、`IssueRepository`、`AuthStore` | `domain/` | import Dio / MQTT / 蓝牙 / Flutter |
 | JSON、HTTP、本地存储、设备协议 | `data/` | import Notifier |
 | 页面、Notifier | `presentation/` | import 别的 feature 的 `data/` |
-| 组装 client / Repository | `app/di.dart` | 在 Page 里 `XxxRemote()` |
+| 组装 client / Repository / Store | `app/di.dart`（Store 在 `store_providers.dart`） | 在 Page 或 Notifier 文件里 `XxxRemote()` / `XxxStoreImpl()` |
 | 会话 / 设置存储 | `authStoreProvider` / `settingsStoreProvider` | 在 Notifier 里直接 `SharedPreferences.getInstance()` |
 | 某一帧预览 | `data/fake_*.dart` + `app/preview.dart` | 假 Dio / 假 Notifier 来看空态、错误页 |
 | 超时、主题、通用错误、`RequestCancel` | `core/` | 把某个业务的 `Issue` 塞进来 |
@@ -140,7 +142,7 @@ Release 不会挂这些 override。看完改回 `AppPreview.off`。
 | HTTP 环境 | `AppConfig.resolve()` / `appConfigProvider` | 改 `AppConfig.github` 的地址来指向假后端 |
 | 日志 / 上报 | `AppLog` / `LogDump` / `CrashReporter` / `AppAnalytics` | 页面里 `print` / `Talker()` / `Sentry.captureException` / `Posthog().capture`；把 token 打进日志或分析属性；用 `dioProvider` 上传 dump |
 
-跨 feature 只走两条路：对方的 **domain 类型**（例如 Issues 用 `User`），或 **`app/di.dart` 里的 provider**。
+跨 feature 只走两条路：对方的 **domain 类型**（资料用 `User`，仓库 owner / Issue 作者用 `UserRef`），或 **`app/di.dart` 里的 provider**。
 
 ## MQTT / 蓝牙
 

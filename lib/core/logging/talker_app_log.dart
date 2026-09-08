@@ -4,10 +4,7 @@ import 'package:learn_flutter/core/logging/should_report.dart';
 import 'package:talker/talker.dart';
 
 class TalkerAppLog implements AppLog {
-  TalkerAppLog(
-    this._talker, {
-    this._crashReporter = const NoOpCrashReporter(),
-  });
+  TalkerAppLog(this._talker, {this._crashReporter = const NoOpCrashReporter()});
 
   final Talker _talker;
   final CrashReporter _crashReporter;

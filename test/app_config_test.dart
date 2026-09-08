@@ -33,9 +33,7 @@ void main() {
   });
 
   test('SENTRY_DSN is attached without changing the API host', () {
-    final config = AppConfig.resolve(
-      sentryDsn: 'https://key@sentry.example/1',
-    );
+    final config = AppConfig.resolve(sentryDsn: 'https://key@sentry.example/1');
     expect(config.env, AppEnv.github);
     expect(config.baseUrl, 'https://api.github.com/');
     expect(config.sentryDsn, 'https://key@sentry.example/1');

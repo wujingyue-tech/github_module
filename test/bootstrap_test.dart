@@ -2,8 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/bootstrap.dart';
 import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/app/store_providers.dart';
 import 'package:learn_flutter/core/crash_reporting/crash_reporter.dart';
-import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
+import 'package:learn_flutter/features/auth/domain/sample_user.dart';
 import 'package:learn_flutter/features/session/domain/app_settings.dart';
 import 'package:learn_flutter/features/session/domain/auth_session.dart';
 import 'package:learn_flutter/features/session/domain/auth_store.dart';
@@ -106,29 +107,32 @@ void main() {
     },
   );
 
-  test('bindCrashReporterUser tracks GitHub login and clears on logout', () async {
-    final reporter = _RecordingCrashReporter();
-    final store = _MemoryAuthStore(
-      const AuthSession(token: 'tok', user: previewUser),
-    );
-    final container = ProviderContainer(
-      overrides: [
-        crashReporterProvider.overrideWithValue(reporter),
-        authStoreProvider.overrideWithValue(store),
-        settingsStoreProvider.overrideWithValue(
-          _MemorySettingsStore(const AppSettings()),
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
+  test(
+    'bindCrashReporterUser tracks GitHub login and clears on logout',
+    () async {
+      final reporter = _RecordingCrashReporter();
+      final store = _MemoryAuthStore(
+        const AuthSession(token: 'tok', user: previewUser),
+      );
+      final container = ProviderContainer(
+        overrides: [
+          crashReporterProvider.overrideWithValue(reporter),
+          authStoreProvider.overrideWithValue(store),
+          settingsStoreProvider.overrideWithValue(
+            _MemorySettingsStore(const AppSettings()),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
 
-    bindCrashReporterUser(container);
-    await container.read(sessionProvider.notifier).restore();
-    expect(reporter.userId, 'octocat');
+      bindCrashReporterUser(container);
+      await container.read(sessionProvider.notifier).restore();
+      expect(reporter.userId, 'octocat');
 
-    await container.read(sessionProvider.notifier).clearAuth();
-    expect(reporter.userId, isNull);
-  });
+      await container.read(sessionProvider.notifier).clearAuth();
+      expect(reporter.userId, isNull);
+    },
+  );
 
   test('bindAnalyticsUser tracks GitHub login and resets on logout', () async {
     final analytics = FakeAppAnalytics();
@@ -160,7 +164,9 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         appAnalyticsProvider.overrideWithValue(analytics),
-        authStoreProvider.overrideWithValue(_MemoryAuthStore(const AuthSession())),
+        authStoreProvider.overrideWithValue(
+          _MemoryAuthStore(const AuthSession()),
+        ),
         settingsStoreProvider.overrideWithValue(
           _MemorySettingsStore(const AppSettings()),
         ),
@@ -171,6 +177,14 @@ void main() {
     bindAnalyticsUser(container);
     expect(analytics.identifies, isEmpty);
     expect(analytics.resetCount, 0);
+  });
+
+  test('identify with an empty id does not reset', () async {
+    final analytics = FakeAppAnalytics();
+    await analytics.identify();
+    await analytics.identify(id: '');
+    expect(analytics.resetCount, 0);
+    expect(analytics.identifies, [null, '']);
   });
 }
 

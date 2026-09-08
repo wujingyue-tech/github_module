@@ -5,12 +5,8 @@ import 'package:posthog_flutter/posthog_flutter.dart';
 
 /// Maps [AnalyticsPolicy] onto posthog_flutter. Empty [apiKey] skips init.
 ///
-/// Flutter web still needs the posthog-js snippet in `web/index.html`; this
-/// Dart setup is what iOS/Android (and tests) actually use.
-Future<void> initPosthog({
-  required String apiKey,
-  required String host,
-}) async {
+/// Targets iOS and Android. Web is not a supported platform for this app.
+Future<void> initPosthog({required String apiKey, required String host}) async {
   if (apiKey.isEmpty) return;
   final config = PostHogConfig(apiKey, beforeSend: [sanitizePosthogEvent]);
   if (host.isNotEmpty) config.host = host;

@@ -56,7 +56,8 @@ SentryEvent? sanitizeSentryEvent(SentryEvent event, Hint hint) {
   final tags = event.tags;
   if (tags != null) {
     event.tags = {
-      for (final entry in tags.entries) entry.key: CrashPolicy.redact(entry.value),
+      for (final entry in tags.entries)
+        entry.key: CrashPolicy.redact(entry.value),
     };
   }
 

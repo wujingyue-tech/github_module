@@ -58,7 +58,10 @@ void main() {
     expect(out.request?.data, isNull);
     expect(out.request?.headers, isEmpty);
     expect(out.breadcrumbs!.single.message, isNot(contains('github_pat_')));
-    expect(out.breadcrumbs!.single.data!['Authorization'], contains('[redacted]'));
+    expect(
+      out.breadcrumbs!.single.data!['Authorization'],
+      contains('[redacted]'),
+    );
     expect(out.tags!['note'], '[redacted]');
     // ignore: deprecated_member_use
     expect(out.extra, isNull);

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learn_flutter/app/di.dart';
+import 'package:learn_flutter/app/store_providers.dart';
 import 'package:learn_flutter/core/logging/log_dump.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
 import 'package:learn_flutter/features/session/presentation/settings_page.dart';
-import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
 import 'package:learn_flutter/l10n/app_localizations_en.dart';
 
 import 'support/fake_log_dump.dart';

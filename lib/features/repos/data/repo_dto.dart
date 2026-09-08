@@ -1,4 +1,4 @@
-import 'package:learn_flutter/features/auth/data/user_dto.dart';
+import 'package:learn_flutter/features/repos/data/owner_dto.dart';
 import 'package:learn_flutter/features/repos/domain/repo.dart';
 
 class RepoDto {
@@ -24,7 +24,7 @@ class RepoDto {
   final int id;
   final String name;
   final String fullName;
-  final UserDto owner;
+  final OwnerDto owner;
   final bool private;
   final String? description;
   final bool fork;
@@ -44,7 +44,7 @@ class RepoDto {
       id: (json['id'] as num).toInt(),
       name: json['name'] as String,
       fullName: json['full_name'] as String,
-      owner: UserDto.fromJson(json['owner'] as Map<String, dynamic>),
+      owner: OwnerDto.fromJson(json['owner'] as Map<String, dynamic>),
       private: json['private'] as bool? ?? false,
       description: json['description'] as String?,
       fork: json['fork'] as bool? ?? false,

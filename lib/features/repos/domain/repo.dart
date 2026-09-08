@@ -1,4 +1,4 @@
-import 'package:learn_flutter/features/auth/domain/user.dart';
+import 'package:learn_flutter/features/auth/domain/user_ref.dart';
 
 class Repo {
   const Repo({
@@ -23,7 +23,7 @@ class Repo {
   final int id;
   final String name;
   final String fullName;
-  final User owner;
+  final UserRef owner;
   final bool private;
   final String? description;
   final bool fork;

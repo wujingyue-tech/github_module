@@ -1,18 +1,7 @@
 import 'package:learn_flutter/core/error/app_exception.dart';
 import 'package:learn_flutter/features/auth/domain/auth_repository.dart';
+import 'package:learn_flutter/features/auth/domain/sample_user.dart';
 import 'package:learn_flutter/features/auth/domain/user.dart';
-
-const previewUser = User(
-  login: 'octocat',
-  avatarUrl: 'https://example.com/a.png',
-  type: 'User',
-  name: 'Octocat',
-  publicRepos: 0,
-  followers: 0,
-  following: 0,
-  totalPrivateRepos: 0,
-  ownedPrivateRepos: 0,
-);
 
 /// In-memory [AuthRepository] for snapshot preview and notifier tests.
 class FakeAuthRepository implements AuthRepository {
