@@ -60,11 +60,9 @@ Future<void> bootstrap() async {
   );
   bindCrashReporterUser(container);
   bindAnalyticsUser(container);
-  log.info(
-    config.posthogApiKey.isEmpty
-        ? 'analytics: disabled (empty POSTHOG_API_KEY)'
-        : 'analytics: posthog ready',
-  );
+  if (config.posthogApiKey.isEmpty) {
+    log.warn('analytics: disabled (empty POSTHOG_API_KEY)');
+  }
   runApp(
     UncontrolledProviderScope(container: container, child: const MainApp()),
   );

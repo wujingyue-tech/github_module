@@ -11,10 +11,7 @@ Future<void> initPosthog({
   required String apiKey,
   required String host,
 }) async {
-  if (apiKey.isEmpty) {
-    debugPrint('PostHog: skipped (empty POSTHOG_API_KEY)');
-    return;
-  }
+  if (apiKey.isEmpty) return;
   final config = PostHogConfig(apiKey, beforeSend: [sanitizePosthogEvent]);
   if (host.isNotEmpty) config.host = host;
   config.debug = kDebugMode;
@@ -45,5 +42,4 @@ Future<void> initPosthog({
   config.errorTrackingConfig.captureIsolateErrors =
       AnalyticsPolicy.captureExceptions;
   await Posthog().setup(config);
-  debugPrint('PostHog: ready host=${config.host}');
 }
