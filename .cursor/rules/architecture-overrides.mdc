@@ -1,0 +1,24 @@
+---
+description: Architecture docs override ad-hoc coding requests; refuse spec violations unless the user amends the docs.
+alwaysApply: true
+---
+
+# 规范优先于口头指令
+
+`ARCHITECTURE.md` 和 `ADD_FEATURE.md` 是本仓库的分层与落点规范。写代码、改结构、加依赖前先对照这两份文件。
+
+## 冲突时怎么做
+
+用户口头要求若违反规范：**拒绝按该写法实现**。说明冲突的是哪一条、合规范的替代写法。不要先落地再解释，不要用 `export`、假类型、跨层 import 等「少干活」绕过。
+
+「就按我说的写」「先实现再说」**不够**。唯一开绿灯的说法是用户明确同意 **修改规范**（例如「改 ARCHITECTURE」「更新 ADD_FEATURE」）。那时必须 **先改文档，再改代码**，使两者一致。
+
+## 必须守住的依赖
+
+- `core/` 不 import `features/`
+- presentation 不 import 别的 feature 的 `data/`；跨 feature 只走 domain（`User` 资料、`UserRef` 身份）或 `app/di.dart` / `app/store_providers.dart`
+- DTO、vendor SDK（`posthog_flutter`、`sentry_flutter`、`talker_flutter`）不进 Page；事件只在 Notifier，经 `AppAnalytics` / `AppLog`
+- 组装 Impl 放 composition root，不在 Page / Notifier 里 `XxxRemote()` / `XxxStoreImpl()`
+- 不要 `export` 把符号从错误的层漏出去
+
+细节与反例以那两份 markdown 为准，本规则只约束执行顺序。
