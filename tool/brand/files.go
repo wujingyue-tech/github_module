@@ -51,22 +51,6 @@ func replaceInRepo(root, old, next string) (int, error) {
 	return changed, err
 }
 
-func replaceIfPresent(root, rel, old, next string) error {
-	path := filepath.Join(root, rel)
-	b, err := os.ReadFile(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil
-		}
-		return err
-	}
-	s := string(b)
-	if !strings.Contains(s, old) {
-		return nil
-	}
-	return os.WriteFile(path, []byte(strings.ReplaceAll(s, old, next)), 0o644)
-}
-
 func replaceExact(root, rel, old, next string) error {
 	path := filepath.Join(root, rel)
 	b, err := os.ReadFile(path)

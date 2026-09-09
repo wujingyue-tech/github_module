@@ -9,11 +9,12 @@ The launcher icon is GitHub's Invertocat (`assets/splash/logo.png`). The Launch 
 
 Copy `.dart_defines.json.example` to `.dart_defines.json` (gitignored) for Sentry DSN and PostHog. Empty keys disable those sinks. Needs a full restart, not hot reload.
 
-Branding repeats (Dart package name, bundle id, splash, icon) go through the Go CLI in `tool/brand`. It is not a Flutter feature and must not live under `lib/`. The Go module path is `brand` (independent of `pubspec` `name`). `name` reads the current Dart package from `pubspec.yaml` and rewrites `package:<pub>/` imports, the README H1, the seed name in `ARCHITECTURE.md`, and `.vscode/launch.json` `"name"` when it matches that package. `package` sets Android `applicationId` / `namespace` and iOS `PRODUCT_BUNDLE_IDENTIFIER`. `splash` / `icon` copy images then run `flutter_native_splash:create` / `flutter_launcher_icons`, bump `+buildNumber`, and restore `GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES`. When cloning this template into a real app, run `name` and `package` first. From the repo root (`fvm` if `.fvmrc` exists):
+Branding repeats (Dart package name, visible app name, bundle id, splash, icon) go through the Go CLI in `tool/brand`. It is not a Flutter feature and must not live under `lib/`. The Go module path is `brand` (independent of `pubspec` `name`). `name` reads the current Dart package from `pubspec.yaml` and rewrites `package:<pub>/` imports, the README H1, the seed name in `ARCHITECTURE.md`, and `.vscode/launch.json` `"name"` when it matches that package. `display` writes the home-screen name per locale (Android `app_name` string resources, iOS `InfoPlist.strings`); omit `--title-zh` to use the same string for Chinese (the CLI reminds you). `AndroidManifest` `android:label` is `@string/app_name`. In-app `appTitle` stays in `lib/l10n/*.arb`. `package` sets Android `applicationId` / `namespace` and iOS `PRODUCT_BUNDLE_IDENTIFIER`. `splash` / `icon` copy images then run `flutter_native_splash:create` / `flutter_launcher_icons`, bump `+buildNumber`, and restore `GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES`. When cloning this template into a real app, run `name`, `display`, and `package` first. From the repo root (`fvm` if `.fvmrc` exists):
 
 ```text
 go -C tool/brand run .
-go -C tool/brand run . name --pub my_app --display "My App"
+go -C tool/brand run . name --pub my_app
+go -C tool/brand run . display --title "My App" --title-zh "我的应用"
 go -C tool/brand run . package --id com.example.myapp
 go -C tool/brand run . splash --image path.png --image-dark path_dark.png
 go -C tool/brand run . icon --image path.png

@@ -2,26 +2,33 @@ package main
 
 import (
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 var bundleID = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$`)
 
-func cmdPackage(root string, args []string) error {
-	fs := newFlagSet("package")
-	id := fs.String("id", "", "reverse-domain application / bundle id")
-	if err := fs.Parse(args); err != nil {
-		return err
+func (a *app) packageCmd() *cobra.Command {
+	var id string
+	cmd := &cobra.Command{
+		Use:   "package",
+		Short: "Android applicationId/namespace + iOS PRODUCT_BUNDLE_IDENTIFIER",
+		RunE: func(*cobra.Command, []string) error {
+			return setBundleID(a.root, id)
+		},
 	}
-	if *id == "" {
-		return fmt.Errorf("package: --id is required")
-	}
-	if !bundleID.MatchString(*id) {
-		return fmt.Errorf("package: --id must look like com.example.app, got %q", *id)
+	cmd.Flags().StringVar(&id, "id", "", "reverse-domain application / bundle id")
+	_ = cmd.MarkFlagRequired("id")
+	return cmd
+}
+
+func setBundleID(root, id string) error {
+	if !bundleID.MatchString(id) {
+		return fmt.Errorf("package: --id must look like com.example.app, got %q", id)
 	}
 	androidOld, err := readGradleID(root)
 	if err != nil {
@@ -32,20 +39,20 @@ func cmdPackage(root string, args []string) error {
 		return err
 	}
 	if err := replaceExact(root, "android/app/build.gradle.kts",
-		`namespace = "`+androidOld+`"`, `namespace = "`+*id+`"`); err != nil {
+		`namespace = "`+androidOld+`"`, `namespace = "`+id+`"`); err != nil {
 		return err
 	}
 	if err := replaceExact(root, "android/app/build.gradle.kts",
-		`applicationId = "`+androidOld+`"`, `applicationId = "`+*id+`"`); err != nil {
+		`applicationId = "`+androidOld+`"`, `applicationId = "`+id+`"`); err != nil {
 		return err
 	}
-	if err := moveKotlinPackage(root, androidOld, *id); err != nil {
+	if err := moveKotlinPackage(root, androidOld, id); err != nil {
 		return err
 	}
-	if err := rewriteIOSBundle(root, iosOld, *id); err != nil {
+	if err := rewriteIOSBundle(root, iosOld, id); err != nil {
 		return err
 	}
-	fmt.Printf("package: android %s → %s; ios %s → %s\n", androidOld, *id, iosOld, *id)
+	fmt.Printf("package: android %s → %s; ios %s → %s\n", androidOld, id, iosOld, id)
 	return nil
 }
 
@@ -97,21 +104,7 @@ func moveKotlinPackage(root, oldID, newID string) error {
 	newDir := filepath.Join(ktRoot, filepath.Join(strings.Split(newID, ".")...))
 	src := filepath.Join(oldDir, "MainActivity.kt")
 	if !fileExists(src) {
-		found := ""
-		_ = filepath.WalkDir(ktRoot, func(path string, d fs.DirEntry, err error) error {
-			if err != nil || d.IsDir() {
-				return err
-			}
-			if d.Name() == "MainActivity.kt" {
-				found = path
-				return filepath.SkipAll
-			}
-			return nil
-		})
-		if found == "" {
-			return fmt.Errorf("MainActivity.kt not found under %s", ktRoot)
-		}
-		src = found
+		return fmt.Errorf("MainActivity.kt not at %s", src)
 	}
 	b, err := os.ReadFile(src)
 	if err != nil {

@@ -5,31 +5,53 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+
+	"github.com/spf13/cobra"
 )
 
-func cmdSplash(root string, args []string) error {
-	fs := newFlagSet("splash")
-	image := fs.String("image", "", "light splash PNG")
-	imageDark := fs.String("image-dark", "", "dark splash PNG (defaults to --image)")
-	color := fs.String("color", "", "light background hex")
-	colorDark := fs.String("color-dark", "", "dark background hex")
-	if err := fs.Parse(args); err != nil {
+func (a *app) splashCmd() *cobra.Command {
+	var image, imageDark, color, colorDark string
+	cmd := &cobra.Command{
+		Use:   "splash",
+		Short: "Copy launch images, flutter_native_splash:create, bump +buildNumber",
+		RunE: func(*cobra.Command, []string) error {
+			return writeSplash(a.root, image, imageDark, color, colorDark)
+		},
+	}
+	cmd.Flags().StringVar(&image, "image", "", "light splash PNG")
+	cmd.Flags().StringVar(&imageDark, "image-dark", "", "dark splash PNG (defaults to --image)")
+	cmd.Flags().StringVar(&color, "color", "", "light background hex")
+	cmd.Flags().StringVar(&colorDark, "color-dark", "", "dark background hex")
+	_ = cmd.MarkFlagRequired("image")
+	return cmd
+}
+
+func (a *app) iconCmd() *cobra.Command {
+	var image string
+	cmd := &cobra.Command{
+		Use:   "icon",
+		Short: "Copy launcher image, flutter_launcher_icons, fix pbxproj, bump +buildNumber",
+		RunE: func(*cobra.Command, []string) error {
+			return writeIcon(a.root, image)
+		},
+	}
+	cmd.Flags().StringVar(&image, "image", "", "1024px (or larger) PNG for the launcher icon")
+	_ = cmd.MarkFlagRequired("image")
+	return cmd
+}
+
+func writeSplash(root, image, imageDark, color, colorDark string) error {
+	if imageDark == "" {
+		imageDark = image
+	}
+	if err := copyPNG(resolvePath(root, image), filepath.Join(root, "assets/splash/splash.png")); err != nil {
 		return err
 	}
-	if *image == "" {
-		return fmt.Errorf("splash: --image is required")
-	}
-	if *imageDark == "" {
-		*imageDark = *image
-	}
-	if err := copyPNG(resolvePath(root, *image), filepath.Join(root, "assets/splash/splash.png")); err != nil {
+	if err := copyPNG(resolvePath(root, imageDark), filepath.Join(root, "assets/splash/splash_dark.png")); err != nil {
 		return err
 	}
-	if err := copyPNG(resolvePath(root, *imageDark), filepath.Join(root, "assets/splash/splash_dark.png")); err != nil {
-		return err
-	}
-	if *color != "" || *colorDark != "" {
-		if err := patchSplashColors(root, *color, *colorDark); err != nil {
+	if color != "" || colorDark != "" {
+		if err := patchSplashColors(root, color, colorDark); err != nil {
 			return err
 		}
 	}
@@ -45,16 +67,8 @@ func cmdSplash(root string, args []string) error {
 	return nil
 }
 
-func cmdIcon(root string, args []string) error {
-	fs := newFlagSet("icon")
-	image := fs.String("image", "", "1024px (or larger) PNG for the launcher icon")
-	if err := fs.Parse(args); err != nil {
-		return err
-	}
-	if *image == "" {
-		return fmt.Errorf("icon: --image is required")
-	}
-	if err := copyPNG(resolvePath(root, *image), filepath.Join(root, "assets/splash/logo.png")); err != nil {
+func writeIcon(root, image string) error {
+	if err := copyPNG(resolvePath(root, image), filepath.Join(root, "assets/splash/logo.png")); err != nil {
 		return err
 	}
 	if err := runDart(root, "run", "flutter_launcher_icons"); err != nil {

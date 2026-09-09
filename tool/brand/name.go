@@ -6,93 +6,62 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 var dartPackageName = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
 
-func cmdName(root string, args []string) error {
-	fs := newFlagSet("name")
-	pub := fs.String("pub", "", "new Dart package name (snake_case)")
-	display := fs.String("display", "", "visible app name (iOS CFBundleDisplayName, Android label)")
-	if err := fs.Parse(args); err != nil {
-		return err
+func (a *app) nameCmd() *cobra.Command {
+	var pub string
+	cmd := &cobra.Command{
+		Use:   "name",
+		Short: "Dart package (pubspec, package: imports, README, ARCHITECTURE seed, VS Code launch name)",
+		RunE: func(*cobra.Command, []string) error {
+			return renamePub(a.root, pub)
+		},
 	}
-	if *pub == "" {
-		return fmt.Errorf("name: --pub is required")
-	}
-	if !dartPackageName.MatchString(*pub) {
-		return fmt.Errorf("name: --pub must be a Dart package name (snake_case), got %q", *pub)
+	cmd.Flags().StringVar(&pub, "pub", "", "new Dart package name (snake_case)")
+	_ = cmd.MarkFlagRequired("pub")
+	return cmd
+}
+
+func renamePub(root, pub string) error {
+	if !dartPackageName.MatchString(pub) {
+		return fmt.Errorf("name: --pub must be a Dart package name (snake_case), got %q", pub)
 	}
 	old, err := readPubspecName(root)
 	if err != nil {
 		return err
 	}
-	if old == *pub && *display == "" {
+	if old == pub {
 		fmt.Println("name: nothing to change")
 		return nil
 	}
-	if old != *pub {
-		n, err := replaceInRepo(root, "package:"+old+"/", "package:"+*pub+"/")
-		if err != nil {
-			return err
-		}
-		if err := replacePubspecName(root, old, *pub); err != nil {
-			return err
-		}
-		if err := replaceIfPresent(root, "ios/Runner/Info.plist",
-			"<string>"+old+"</string>", "<string>"+*pub+"</string>"); err != nil {
-			return err
-		}
-		if err := replaceIfPresent(root, "android/app/src/main/AndroidManifest.xml",
-			`android:label="`+old+`"`, `android:label="`+*pub+`"`); err != nil {
-			return err
-		}
-		if err := rewritePubNameAnchors(root, old, *pub); err != nil {
-			return err
-		}
-		fmt.Printf("name: %s → %s (%d files with package: imports)\n", old, *pub, n)
+	n, err := replaceInRepo(root, "package:"+old+"/", "package:"+pub+"/")
+	if err != nil {
+		return err
 	}
-	if *display != "" {
-		if err := setDisplayName(root, *display); err != nil {
-			return err
-		}
-		fmt.Printf("display name: %s\n", *display)
+	if err := replacePubspecName(root, old, pub); err != nil {
+		return err
 	}
+	if err := rewritePubNameAnchors(root, old, pub); err != nil {
+		return err
+	}
+	fmt.Printf("name: %s → %s (%d files with package: imports)\n", old, pub, n)
 	return nil
 }
 
-// README H1, ARCHITECTURE seed phrase, VS Code launch config name matching the Dart package.
 func rewritePubNameAnchors(root, old, next string) error {
-	if err := replaceIfPresent(root, "README.md", "# "+old+"\n", "# "+next+"\n"); err != nil {
+	if err := replaceExact(root, "README.md", "# "+old+"\n", "# "+next+"\n"); err != nil {
 		return err
 	}
-	if err := replaceIfPresent(root, "ARCHITECTURE.md",
+	if err := replaceExact(root, "ARCHITECTURE.md",
 		"one seed name (`"+old+"`)", "one seed name (`"+next+"`)"); err != nil {
 		return err
 	}
-	return replaceIfPresent(root, ".vscode/launch.json",
+	return replaceExact(root, ".vscode/launch.json",
 		`"name": "`+old+`"`, `"name": "`+next+`"`)
-}
-
-func setDisplayName(root, display string) error {
-	plist := filepath.Join(root, "ios/Runner/Info.plist")
-	b, err := os.ReadFile(plist)
-	if err != nil {
-		return err
-	}
-	re := regexp.MustCompile(`(?s)(<key>CFBundleDisplayName</key>\s*<string>)[^<]+(</string>)`)
-	updated := re.ReplaceAll(b, []byte("${1}"+display+"${2}"))
-	if err := os.WriteFile(plist, updated, 0o644); err != nil {
-		return err
-	}
-	manifest := filepath.Join(root, "android/app/src/main/AndroidManifest.xml")
-	mb, err := os.ReadFile(manifest)
-	if err != nil {
-		return err
-	}
-	mre := regexp.MustCompile(`android:label="[^"]*"`)
-	mb = mre.ReplaceAll(mb, []byte(`android:label="`+display+`"`))
-	return os.WriteFile(manifest, mb, 0o644)
 }
 
 func replacePubspecName(root, old, next string) error {

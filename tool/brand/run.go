@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -9,12 +8,6 @@ import (
 	"regexp"
 	"strconv"
 )
-
-func newFlagSet(name string) *flag.FlagSet {
-	fs := flag.NewFlagSet(name, flag.ContinueOnError)
-	fs.SetOutput(os.Stderr)
-	return fs
-}
 
 func runDart(root string, args ...string) error {
 	bin := "dart"

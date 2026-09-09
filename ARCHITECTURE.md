@@ -17,10 +17,10 @@ lib/
     */presentation/  pages and Riverpod notifiers
   l10n/          generated localizations (Flutter codegen)
 tool/
-  brand/         Go CLI: Dart package name, bundle id, splash, launcher icon
+  brand/         Go CLI: Dart package name, visible app name, bundle id, splash, launcher icon
 ```
 
-`tool/brand` is a Go CLI at the repo root. It is not a Flutter feature: it must not import `lib/`, and Pages must not call it. Its Go module path is `brand`, not the Dart package name. `name` reads the current name from `pubspec.yaml` and rewrites `package:<that>/` imports, the README H1 (`# <pub>`), this file's seed phrase (`one seed name (...)`), and `.vscode/launch.json` `"name"` when it equals the Dart package. Dart cannot drop `package:` imports — the template keeps one seed name (`github_module`) until you run `name`.
+`tool/brand` is a Go CLI at the repo root. It is not a Flutter feature: it must not import `lib/`, and Pages must not call it. Its Go module path is `brand`, not the Dart package name. `name` reads the current name from `pubspec.yaml` and rewrites `package:<that>/` imports, the README H1 (`# <pub>`), this file's seed phrase (`one seed name (...)`), and `.vscode/launch.json` `"name"` when it equals the Dart package. `display` writes the home-screen name per locale: Android `res/values/strings.xml` and `res/values-zh/strings.xml` (`app_name`); iOS `en.lproj/InfoPlist.strings` and `zh.lproj/InfoPlist.strings`. `--title` is required. `--title-zh` is optional; if omitted, Chinese uses the same string as `--title`, and the CLI says so. `AndroidManifest` `android:label` is `@string/app_name` in the template; `display` does not rewrite it. iOS `Info.plist` still holds the English `CFBundleDisplayName` / `CFBundleName` because that is the OS default when a locale has no `InfoPlist.strings`. This does not change the Dart package or in-app `appTitle` in `lib/l10n/*.arb`. Dart cannot drop `package:` imports — the template keeps one seed name (`github_module`) until you run `name`.
 
 Persistence for auth and settings is a domain port (`AuthStore` / `SettingsStore`) with the I/O implementation in `features/session/data`. `core` stays free of feature types. Notifiers must not call `SharedPreferences` or Keychain directly.
 
