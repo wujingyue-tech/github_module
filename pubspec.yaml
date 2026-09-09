@@ -4,7 +4,7 @@ publish_to: 'none'
 # YYYY.MINOR.PATCH+buildNumber — one value for iOS, Android, and the Settings UI.
 # Example: Android Studio Quail 4 is 2026.1.4. Bump PATCH for fixes, MINOR for features,
 # YEAR when the product line rolls. Only +buildNumber must increase for store uploads.
-version: 2026.1.0+1
+version: 2026.1.0+4
 
 environment:
   sdk: ^3.13.2
