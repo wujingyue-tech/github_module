@@ -1,0 +1,18 @@
+# Regenerates iOS AppIcon and Android mipmap launcher icons.
+# dart run flutter_launcher_icons
+#
+# That command rewrites every ASSETCATALOG_* line in project.pbxproj to
+# "= AppIcon", including GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS (must stay
+# YES). ios/Flutter/Debug.xcconfig and Release.xcconfig pin the correct
+# values so a later icon regen does not ship Flutter's default mark again.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/splash/logo.png
+  remove_alpha_ios: true
+  background_color_ios: "#FFFFFF"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: assets/splash/logo.png
+  adaptive_icon_foreground_inset: 16
+  web:
+    generate: false

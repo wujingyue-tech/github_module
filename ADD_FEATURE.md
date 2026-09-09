@@ -98,7 +98,7 @@ ref.read(sessionProvider.notifier).clearAuth()
 
 ## 6. 接到路由和文案
 
-在 `lib/app/router.dart` 加 `GoRoute`。需要登录的页面，现有 redirect 会挡住未登录用户。
+在 `lib/app/router.dart` 加 `GoRoute`。需要登录的页面，现有 redirect 会挡住未登录用户。冷启动闪屏是系统 Launch Screen，不要再加 Flutter `/splash` 页。改图标或闪屏后卸载 App 不够，需要 `flutter clean` 再整次 `flutter run`。
 
 文案加到 `lib/l10n/*.arb`，不要在页面里写死中英文。
 

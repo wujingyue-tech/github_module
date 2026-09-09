@@ -1,1 +1,5 @@
 #include "Generated.xcconfig"
+// flutter_launcher_icons rewrites every ASSETCATALOG_* pbxproj line to AppIcon.
+// Keep this YES here so Debug/Release still compile the catalog after that.
+ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon

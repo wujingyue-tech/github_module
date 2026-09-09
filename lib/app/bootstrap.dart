@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:learn_flutter/app/app.dart';
 import 'package:learn_flutter/app/di.dart';
 import 'package:learn_flutter/app/error_hooks.dart';
+import 'package:learn_flutter/app/native_splash.dart';
 import 'package:learn_flutter/app/preview.dart';
 import 'package:learn_flutter/core/analytics/posthog/init_posthog.dart';
 import 'package:learn_flutter/core/app_info.dart';
@@ -16,13 +17,14 @@ import 'package:learn_flutter/features/session/presentation/settings_provider.da
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-/// Loads persisted auth and settings before the first frame.
+/// Keeps the OS launch splash up while auth and settings restore.
 ///
 /// Restore failures are reported and ignored so the app can still start
 /// logged-out with default settings. The [ProviderContainer] lives for the
 /// process lifetime.
 Future<void> bootstrap() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+  preserveNativeSplash(binding);
   final packageInfo = await PackageInfo.fromPlatform();
   final config = AppConfig.resolve();
   await initSentry(
@@ -62,6 +64,7 @@ Future<void> bootstrap() async {
   runApp(
     UncontrolledProviderScope(container: container, child: const MainApp()),
   );
+  binding.addPostFrameCallback((_) => removeNativeSplash());
 }
 
 /// One warn per empty sink. Init adapters stay silent so this can use [AppLog].

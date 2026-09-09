@@ -1,0 +1,21 @@
+# Regenerates iOS LaunchScreen and Android 12 splash.
+# dart run flutter_native_splash:create
+#
+# Logo is GitHub's Invertocat (Wikimedia File:GitHub_Invertocat_Logo.svg).
+# Light: black mark on white. Dark: inverted mark on #121212.
+flutter_native_splash:
+  web: false
+  color: "#FFFFFF"
+  color_dark: "#121212"
+  image: assets/splash/logo.png
+  image_dark: assets/splash/logo_dark.png
+  # iOS 18 zooms the home-screen icon first. Fit the mark instead of a 1024pt
+  # centered crop so the Launch Screen matches that zoom.
+  ios_content_mode: scaleAspectFit
+  android_12:
+    color: "#FFFFFF"
+    color_dark: "#121212"
+    image: assets/splash/logo.png
+    image_dark: assets/splash/logo_dark.png
+    icon_background_color: "#FFFFFF"
+    icon_background_color_dark: "#121212"
