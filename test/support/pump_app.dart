@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/app.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/core/logging/noop_app_log.dart';
-import 'package:learn_flutter/features/session/domain/app_settings.dart';
-import 'package:learn_flutter/features/session/domain/auth_session.dart';
-import 'package:learn_flutter/features/session/domain/auth_store.dart';
-import 'package:learn_flutter/features/session/domain/settings_store.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
-import 'package:learn_flutter/l10n/app_localizations.dart';
+import 'package:github_module/app/app.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/core/logging/noop_app_log.dart';
+import 'package:github_module/features/session/domain/app_settings.dart';
+import 'package:github_module/features/session/domain/auth_session.dart';
+import 'package:github_module/features/session/domain/auth_store.dart';
+import 'package:github_module/features/session/domain/settings_store.dart';
+import 'package:github_module/features/session/presentation/session_provider.dart';
+import 'package:github_module/l10n/app_localizations.dart';
 
 class MemoryAuthStore implements AuthStore {
   MemoryAuthStore([this.session = const AuthSession()]);

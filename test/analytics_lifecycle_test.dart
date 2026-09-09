@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/app/store_providers.dart';
-import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/app/store_providers.dart';
+import 'package:github_module/features/repos/data/fake_repo_repository.dart';
 
 import 'support/fake_app_analytics.dart';
 import 'support/pump_app.dart';

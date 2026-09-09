@@ -2,9 +2,9 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/request_cancel.dart';
-import 'package:learn_flutter/features/repos/data/github_repo_remote.dart';
-import 'package:learn_flutter/features/repos/data/repo_repository_impl.dart';
+import 'package:github_module/core/request_cancel.dart';
+import 'package:github_module/features/repos/data/github_repo_remote.dart';
+import 'package:github_module/features/repos/data/repo_repository_impl.dart';
 
 class _Adapter implements HttpClientAdapter {
   _Adapter({required this.status, required this.body});

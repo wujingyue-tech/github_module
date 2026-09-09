@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/features/session/data/settings_store_impl.dart';
-import 'package:learn_flutter/features/session/domain/app_settings.dart';
+import 'package:github_module/features/session/data/settings_store_impl.dart';
+import 'package:github_module/features/session/domain/app_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

@@ -1,5 +1,5 @@
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/l10n/app_localizations.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/l10n/app_localizations.dart';
 
 String colorLabel(AppLocalizations l10n, int index) {
   return switch (index) {

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/request_cancel.dart';
-import 'package:learn_flutter/features/auth/domain/sample_user.dart';
-import 'package:learn_flutter/features/repos/domain/repo.dart';
-import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/core/request_cancel.dart';
+import 'package:github_module/features/auth/domain/sample_user.dart';
+import 'package:github_module/features/repos/domain/repo.dart';
+import 'package:github_module/features/repos/domain/repo_repository.dart';
 
 Repo sampleRepo(int id) {
   return Repo(

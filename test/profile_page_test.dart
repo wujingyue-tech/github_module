@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/app/store_providers.dart';
-import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
-import 'package:learn_flutter/features/auth/domain/sample_user.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
-import 'package:learn_flutter/features/auth/presentation/profile_page.dart';
-import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
-import 'package:learn_flutter/features/session/domain/auth_session.dart';
-import 'package:learn_flutter/l10n/app_localizations_en.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/app/store_providers.dart';
+import 'package:github_module/features/auth/data/fake_auth_repository.dart';
+import 'package:github_module/features/auth/domain/sample_user.dart';
+import 'package:github_module/features/auth/domain/user.dart';
+import 'package:github_module/features/auth/presentation/profile_page.dart';
+import 'package:github_module/features/repos/data/fake_repo_repository.dart';
+import 'package:github_module/features/session/domain/auth_session.dart';
+import 'package:github_module/l10n/app_localizations_en.dart';
 
 import 'support/mock_network_images.dart';
 import 'support/pump_app.dart';

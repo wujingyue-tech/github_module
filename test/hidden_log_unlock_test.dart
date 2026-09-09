@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/hidden_log_unlock.dart';
+import 'package:github_module/app/hidden_log_unlock.dart';
 
 void main() {
   testWidgets('unlocks after double-tap, hold, double-tap', (tester) async {

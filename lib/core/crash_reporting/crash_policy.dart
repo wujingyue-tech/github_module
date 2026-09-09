@@ -1,5 +1,5 @@
-import 'package:learn_flutter/core/logging/sanitize_log_dump.dart';
-import 'package:learn_flutter/core/logging/should_report.dart';
+import 'package:github_module/core/logging/sanitize_log_dump.dart';
+import 'package:github_module/core/logging/should_report.dart';
 
 /// What this app is willing to send to any crash backend.
 ///

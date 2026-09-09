@@ -1,5 +1,5 @@
-import 'package:learn_flutter/features/auth/domain/auth_repository.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
+import 'package:github_module/features/auth/domain/auth_repository.dart';
+import 'package:github_module/features/auth/domain/user.dart';
 
 import 'github_auth_remote.dart';
 

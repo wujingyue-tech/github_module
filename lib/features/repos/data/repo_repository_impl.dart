@@ -1,6 +1,6 @@
-import 'package:learn_flutter/core/request_cancel.dart';
-import 'package:learn_flutter/features/repos/domain/repo.dart';
-import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
+import 'package:github_module/core/request_cancel.dart';
+import 'package:github_module/features/repos/domain/repo.dart';
+import 'package:github_module/features/repos/domain/repo_repository.dart';
 
 import 'github_repo_remote.dart';
 

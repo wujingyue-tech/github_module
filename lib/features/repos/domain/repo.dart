@@ -1,4 +1,4 @@
-import 'package:learn_flutter/features/auth/domain/user_ref.dart';
+import 'package:github_module/features/auth/domain/user_ref.dart';
 
 class Repo {
   const Repo({

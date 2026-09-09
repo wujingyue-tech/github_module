@@ -2,9 +2,9 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/features/auth/data/auth_repository_impl.dart';
-import 'package:learn_flutter/features/auth/data/github_auth_remote.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/features/auth/data/auth_repository_impl.dart';
+import 'package:github_module/features/auth/data/github_auth_remote.dart';
 
 class _Adapter implements HttpClientAdapter {
   _Adapter({required this.status, required this.body});

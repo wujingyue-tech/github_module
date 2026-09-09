@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:learn_flutter/core/analytics/analytics_policy.dart';
-import 'package:learn_flutter/core/analytics/posthog/sanitize_posthog_event.dart';
+import 'package:github_module/core/analytics/analytics_policy.dart';
+import 'package:github_module/core/analytics/posthog/sanitize_posthog_event.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 /// Maps [AnalyticsPolicy] onto posthog_flutter. Empty [apiKey] skips init.

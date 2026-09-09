@@ -16,7 +16,11 @@ lib/
     */data/      remotes, DTOs, stores, repository implementations
     */presentation/  pages and Riverpod notifiers
   l10n/          generated localizations (Flutter codegen)
+tool/
+  brand/         Go CLI: Dart package name, bundle id, splash, launcher icon
 ```
+
+`tool/brand` is a Go CLI at the repo root. It is not a Flutter feature: it must not import `lib/`, and Pages must not call it. Its Go module path is `brand`, not the Dart package name. `name` reads the current name from `pubspec.yaml` and rewrites `package:<that>/` imports, the README H1 (`# <pub>`), this file's seed phrase (`one seed name (...)`), and `.vscode/launch.json` `"name"` when it equals the Dart package. Dart cannot drop `package:` imports — the template keeps one seed name (`github_module`) until you run `name`.
 
 Persistence for auth and settings is a domain port (`AuthStore` / `SettingsStore`) with the I/O implementation in `features/session/data`. `core` stays free of feature types. Notifiers must not call `SharedPreferences` or Keychain directly.
 

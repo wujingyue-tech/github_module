@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/app/store_providers.dart';
-import 'package:learn_flutter/core/analytics/analytics_policy.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/features/auth/data/fake_auth_repository.dart';
-import 'package:learn_flutter/features/auth/domain/sample_user.dart';
-import 'package:learn_flutter/features/auth/presentation/auth_provider.dart';
-import 'package:learn_flutter/features/session/domain/auth_session.dart';
-import 'package:learn_flutter/features/session/domain/auth_store.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/app/store_providers.dart';
+import 'package:github_module/core/analytics/analytics_policy.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/features/auth/data/fake_auth_repository.dart';
+import 'package:github_module/features/auth/domain/sample_user.dart';
+import 'package:github_module/features/auth/presentation/auth_provider.dart';
+import 'package:github_module/features/session/domain/auth_session.dart';
+import 'package:github_module/features/session/domain/auth_store.dart';
+import 'package:github_module/features/session/presentation/session_provider.dart';
 
 import 'support/fake_app_analytics.dart';
 

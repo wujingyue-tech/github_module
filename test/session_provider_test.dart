@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/store_providers.dart';
-import 'package:learn_flutter/features/auth/domain/sample_user.dart';
-import 'package:learn_flutter/features/session/domain/auth_session.dart';
-import 'package:learn_flutter/features/session/domain/auth_store.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
+import 'package:github_module/app/store_providers.dart';
+import 'package:github_module/features/auth/domain/sample_user.dart';
+import 'package:github_module/features/session/domain/auth_session.dart';
+import 'package:github_module/features/session/domain/auth_store.dart';
+import 'package:github_module/features/session/presentation/session_provider.dart';
 
 class _FakeAuthStore implements AuthStore {
   _FakeAuthStore([this.session = const AuthSession()]);

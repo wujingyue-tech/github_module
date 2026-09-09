@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:learn_flutter/core/logging/app_log.dart';
+import 'package:github_module/core/logging/app_log.dart';
 
 void installErrorHooks(AppLog log) {
   FlutterError.onError = (details) {

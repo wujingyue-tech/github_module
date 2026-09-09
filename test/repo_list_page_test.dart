@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/request_cancel.dart';
-import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
-import 'package:learn_flutter/features/repos/domain/repo.dart';
-import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
-import 'package:learn_flutter/features/repos/presentation/repo_list_page.dart';
-import 'package:learn_flutter/l10n/app_localizations_en.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/core/request_cancel.dart';
+import 'package:github_module/features/repos/data/fake_repo_repository.dart';
+import 'package:github_module/features/repos/domain/repo.dart';
+import 'package:github_module/features/repos/domain/repo_repository.dart';
+import 'package:github_module/features/repos/presentation/repo_list_page.dart';
+import 'package:github_module/l10n/app_localizations_en.dart';
 
 import 'support/pump_app.dart';
 

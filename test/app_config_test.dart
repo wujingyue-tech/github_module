@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/network/app_config.dart';
+import 'package:github_module/core/network/app_config.dart';
 
 void main() {
   test('resolve defaults to GitHub', () {

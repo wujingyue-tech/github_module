@@ -1,4 +1,4 @@
-name: learn_flutter
+name: github_module
 description: Flutter GitHub client used as a feature-first architecture template.
 publish_to: 'none'
 # YYYY.MINOR.PATCH+buildNumber — one value for iOS, Android, and the Settings UI.

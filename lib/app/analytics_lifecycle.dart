@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_flutter/app/di.dart';
+import 'package:github_module/app/di.dart';
 
 /// Flushes the analytics queue when the app leaves the foreground.
 class AnalyticsLifecycle extends ConsumerStatefulWidget {

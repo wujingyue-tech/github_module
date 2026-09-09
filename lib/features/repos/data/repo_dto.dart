@@ -1,5 +1,5 @@
-import 'package:learn_flutter/features/repos/data/owner_dto.dart';
-import 'package:learn_flutter/features/repos/domain/repo.dart';
+import 'package:github_module/features/repos/data/owner_dto.dart';
+import 'package:github_module/features/repos/domain/repo.dart';
 
 class RepoDto {
   const RepoDto({

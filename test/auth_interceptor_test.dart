@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/network/auth_interceptor.dart';
+import 'package:github_module/core/network/auth_interceptor.dart';
 
 class _Adapter implements HttpClientAdapter {
   _Adapter(this.status);

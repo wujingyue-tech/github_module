@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/core/analytics/analytics_policy.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/request_cancel.dart';
-import 'package:learn_flutter/features/repos/data/fake_repo_repository.dart';
-import 'package:learn_flutter/features/repos/domain/repo.dart';
-import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
-import 'package:learn_flutter/features/repos/presentation/repo_list_provider.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/core/analytics/analytics_policy.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/core/request_cancel.dart';
+import 'package:github_module/features/repos/data/fake_repo_repository.dart';
+import 'package:github_module/features/repos/domain/repo.dart';
+import 'package:github_module/features/repos/domain/repo_repository.dart';
+import 'package:github_module/features/repos/presentation/repo_list_provider.dart';
 
 import 'support/fake_app_analytics.dart';
 

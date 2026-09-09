@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/core/logging/debug_log_view.dart';
-import 'package:learn_flutter/l10n/app_localizations.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/core/logging/debug_log_view.dart';
+import 'package:github_module/l10n/app_localizations.dart';
 
 class LogViewerPage extends ConsumerWidget {
   const LogViewerPage({super.key});

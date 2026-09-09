@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/app/hidden_log_unlock.dart';
-import 'package:learn_flutter/app/log_console_provider.dart';
-import 'package:learn_flutter/core/l10n/l10n_ext.dart';
-import 'package:learn_flutter/core/theme/app_themes.dart';
-import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
-import 'package:learn_flutter/l10n/app_localizations.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/app/hidden_log_unlock.dart';
+import 'package:github_module/app/log_console_provider.dart';
+import 'package:github_module/core/l10n/l10n_ext.dart';
+import 'package:github_module/core/theme/app_themes.dart';
+import 'package:github_module/features/session/presentation/settings_provider.dart';
+import 'package:github_module/l10n/app_localizations.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_flutter/app/analytics_lifecycle.dart';
-import 'package:learn_flutter/app/log_console_host.dart';
-import 'package:learn_flutter/app/router.dart';
-import 'package:learn_flutter/core/theme/app_themes.dart';
-import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
-import 'package:learn_flutter/l10n/app_localizations.dart';
+import 'package:github_module/app/analytics_lifecycle.dart';
+import 'package:github_module/app/log_console_host.dart';
+import 'package:github_module/app/router.dart';
+import 'package:github_module/core/theme/app_themes.dart';
+import 'package:github_module/features/session/presentation/settings_provider.dart';
+import 'package:github_module/l10n/app_localizations.dart';
 
 class MainApp extends ConsumerWidget {
   const MainApp({super.key});

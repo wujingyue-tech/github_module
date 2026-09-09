@@ -1,4 +1,4 @@
-import 'package:learn_flutter/core/logging/log_dump.dart';
+import 'package:github_module/core/logging/log_dump.dart';
 
 class FakeLogDump implements LogDump {
   FakeLogDump({this.text = '', this.report, this.error});

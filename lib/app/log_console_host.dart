@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_flutter/app/log_console_provider.dart';
+import 'package:github_module/app/log_console_provider.dart';
 
 class LogConsoleHost extends ConsumerStatefulWidget {
   const LogConsoleHost({super.key, required this.router, required this.child});

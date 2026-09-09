@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/error/map_dio_exception.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/core/error/map_dio_exception.dart';
 
 void main() {
   group('mapDioException', () {

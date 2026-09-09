@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/analytics/posthog/sanitize_posthog_event.dart';
+import 'package:github_module/core/analytics/posthog/sanitize_posthog_event.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 void main() {

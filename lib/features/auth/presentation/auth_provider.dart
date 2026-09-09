@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/core/analytics/analytics_policy.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/core/analytics/analytics_policy.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/features/auth/domain/user.dart';
+import 'package:github_module/features/session/presentation/session_provider.dart';
 
 class AuthNotifier extends AsyncNotifier<User?> {
   @override

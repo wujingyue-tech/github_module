@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
-import 'package:learn_flutter/features/session/domain/auth_session.dart';
-import 'package:learn_flutter/features/session/domain/auth_store.dart';
+import 'package:github_module/features/auth/domain/user.dart';
+import 'package:github_module/features/session/domain/auth_session.dart';
+import 'package:github_module/features/session/domain/auth_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthStoreImpl implements AuthStore {

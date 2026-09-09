@@ -1,5 +1,5 @@
-import 'package:learn_flutter/core/crash_reporting/crash_policy.dart';
-import 'package:learn_flutter/core/crash_reporting/sentry/sanitize_sentry_event.dart';
+import 'package:github_module/core/crash_reporting/crash_policy.dart';
+import 'package:github_module/core/crash_reporting/sentry/sanitize_sentry_event.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 /// Maps [CrashPolicy] onto sentry_flutter. Empty [dsn] skips init.

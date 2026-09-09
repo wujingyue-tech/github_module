@@ -1,4 +1,4 @@
-import 'package:learn_flutter/core/analytics/app_analytics.dart';
+import 'package:github_module/core/analytics/app_analytics.dart';
 
 class FakeAppAnalytics implements AppAnalytics {
   final screens = <String>[];

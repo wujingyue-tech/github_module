@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:learn_flutter/features/session/domain/app_settings.dart';
-import 'package:learn_flutter/features/session/domain/settings_store.dart';
+import 'package:github_module/features/session/domain/app_settings.dart';
+import 'package:github_module/features/session/domain/settings_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsStoreImpl implements SettingsStore {

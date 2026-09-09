@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/error/map_dio_exception.dart';
-import 'package:learn_flutter/core/network/dio_cancel.dart';
-import 'package:learn_flutter/core/request_cancel.dart';
-import 'package:learn_flutter/features/repos/domain/repo_repository.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/core/error/map_dio_exception.dart';
+import 'package:github_module/core/network/dio_cancel.dart';
+import 'package:github_module/core/request_cancel.dart';
+import 'package:github_module/features/repos/domain/repo_repository.dart';
 
 import 'repo_dto.dart';
 

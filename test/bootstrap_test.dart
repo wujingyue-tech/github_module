@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/app/bootstrap.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/app/store_providers.dart';
-import 'package:learn_flutter/core/crash_reporting/crash_reporter.dart';
-import 'package:learn_flutter/core/logging/app_log.dart';
-import 'package:learn_flutter/core/network/app_config.dart';
-import 'package:learn_flutter/features/auth/domain/sample_user.dart';
-import 'package:learn_flutter/features/session/domain/app_settings.dart';
-import 'package:learn_flutter/features/session/domain/auth_session.dart';
-import 'package:learn_flutter/features/session/domain/auth_store.dart';
-import 'package:learn_flutter/features/session/domain/settings_store.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
-import 'package:learn_flutter/features/session/presentation/settings_provider.dart';
+import 'package:github_module/app/bootstrap.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/app/store_providers.dart';
+import 'package:github_module/core/crash_reporting/crash_reporter.dart';
+import 'package:github_module/core/logging/app_log.dart';
+import 'package:github_module/core/network/app_config.dart';
+import 'package:github_module/features/auth/domain/sample_user.dart';
+import 'package:github_module/features/session/domain/app_settings.dart';
+import 'package:github_module/features/session/domain/auth_session.dart';
+import 'package:github_module/features/session/domain/auth_store.dart';
+import 'package:github_module/features/session/domain/settings_store.dart';
+import 'package:github_module/features/session/presentation/session_provider.dart';
+import 'package:github_module/features/session/presentation/settings_provider.dart';
 
 import 'support/fake_app_analytics.dart';
 

@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/logging/http_log_dump.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/core/logging/http_log_dump.dart';
 import 'package:talker/talker.dart';
 
 class _Adapter implements HttpClientAdapter {

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:learn_flutter/app/store_providers.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
-import 'package:learn_flutter/features/session/domain/auth_session.dart';
-import 'package:learn_flutter/features/session/domain/auth_store.dart';
+import 'package:github_module/app/store_providers.dart';
+import 'package:github_module/features/auth/domain/user.dart';
+import 'package:github_module/features/session/domain/auth_session.dart';
+import 'package:github_module/features/session/domain/auth_store.dart';
 
 class SessionNotifier extends Notifier<AuthSession> {
   @override

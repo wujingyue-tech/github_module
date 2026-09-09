@@ -1,7 +1,7 @@
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/features/auth/domain/auth_repository.dart';
-import 'package:learn_flutter/features/auth/domain/sample_user.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/features/auth/domain/auth_repository.dart';
+import 'package:github_module/features/auth/domain/sample_user.dart';
+import 'package:github_module/features/auth/domain/user.dart';
 
 /// In-memory [AuthRepository] for snapshot preview and notifier tests.
 class FakeAuthRepository implements AuthRepository {

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:learn_flutter/core/request_cancel.dart';
+import 'package:github_module/core/request_cancel.dart';
 
 CancelToken cancelTokenFor(RequestCancel? cancel) {
   final token = CancelToken();

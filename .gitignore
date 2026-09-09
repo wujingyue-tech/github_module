@@ -49,3 +49,8 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Go branding CLI binary
+/tool/brand/brand
+/tool/brand/brand.exe
+

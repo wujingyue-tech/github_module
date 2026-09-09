@@ -1,4 +1,4 @@
-import 'package:learn_flutter/core/logging/app_log.dart';
+import 'package:github_module/core/logging/app_log.dart';
 
 class NoOpAppLog implements AppLog {
   const NoOpAppLog();

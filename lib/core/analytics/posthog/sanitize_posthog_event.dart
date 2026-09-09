@@ -1,4 +1,4 @@
-import 'package:learn_flutter/core/analytics/analytics_policy.dart';
+import 'package:github_module/core/analytics/analytics_policy.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 /// Last-chance map of [AnalyticsPolicy] onto a PostHog event.

@@ -1,5 +1,5 @@
-import 'package:learn_flutter/features/auth/domain/user.dart';
-import 'package:learn_flutter/features/auth/domain/user_ref.dart';
+import 'package:github_module/features/auth/domain/user.dart';
+import 'package:github_module/features/auth/domain/user_ref.dart';
 
 /// Shared fixtures for Fake repositories and widget tests. Domain types only.
 const previewUserRef = UserRef(

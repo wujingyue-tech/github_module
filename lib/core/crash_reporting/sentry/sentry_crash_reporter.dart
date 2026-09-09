@@ -1,4 +1,4 @@
-import 'package:learn_flutter/core/crash_reporting/crash_reporter.dart';
+import 'package:github_module/core/crash_reporting/crash_reporter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class SentryCrashReporter implements CrashReporter {

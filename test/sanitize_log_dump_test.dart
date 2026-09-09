@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/logging/sanitize_log_dump.dart';
+import 'package:github_module/core/logging/sanitize_log_dump.dart';
 
 void main() {
   test('redacts GitHub tokens and Authorization', () {

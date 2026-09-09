@@ -1,4 +1,4 @@
-# learn_flutter
+# github_module
 
 Flutter GitHub client used as a feature-first architecture template. Ships iOS and Android only. SDK version is `.fvmrc` (currently 3.47.2); CI reads the same file.
 
@@ -8,6 +8,16 @@ Flutter GitHub client used as a feature-first architecture template. Ships iOS a
 The launcher icon is GitHub's Invertocat (`assets/splash/logo.png`). The Launch Screen uses the GitHub **wordmark** (`assets/splash/splash.png` / `splash_dark.png`), not the same cat. After changing either, run `dart run flutter_native_splash:create` and `dart run flutter_launcher_icons`, then a full `fvm flutter run` (iOS caches the old launch snapshot if you only hot restart).
 
 Copy `.dart_defines.json.example` to `.dart_defines.json` (gitignored) for Sentry DSN and PostHog. Empty keys disable those sinks. Needs a full restart, not hot reload.
+
+Branding repeats (Dart package name, bundle id, splash, icon) go through the Go CLI in `tool/brand`. It is not a Flutter feature and must not live under `lib/`. The Go module path is `brand` (independent of `pubspec` `name`). `name` reads the current Dart package from `pubspec.yaml` and rewrites `package:<pub>/` imports, the README H1, the seed name in `ARCHITECTURE.md`, and `.vscode/launch.json` `"name"` when it matches that package. `package` sets Android `applicationId` / `namespace` and iOS `PRODUCT_BUNDLE_IDENTIFIER`. `splash` / `icon` copy images then run `flutter_native_splash:create` / `flutter_launcher_icons`, bump `+buildNumber`, and restore `GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES`. When cloning this template into a real app, run `name` and `package` first. From the repo root (`fvm` if `.fvmrc` exists):
+
+```text
+go -C tool/brand run .
+go -C tool/brand run . name --pub my_app --display "My App"
+go -C tool/brand run . package --id com.example.myapp
+go -C tool/brand run . splash --image path.png --image-dark path_dark.png
+go -C tool/brand run . icon --image path.png
+```
 
 ```text
 flutter run --dart-define=APP_ENV=sandbox

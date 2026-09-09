@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:learn_flutter/features/auth/domain/user.dart';
+import 'package:github_module/features/auth/domain/user.dart';
 
 class UserDto {
   const UserDto({

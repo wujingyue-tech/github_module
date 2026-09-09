@@ -1,4 +1,4 @@
-import 'package:learn_flutter/core/request_cancel.dart';
+import 'package:github_module/core/request_cancel.dart';
 
 import 'repo.dart';
 

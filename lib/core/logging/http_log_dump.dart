@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:learn_flutter/core/app_info.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/error/map_dio_exception.dart';
-import 'package:learn_flutter/core/logging/log_dump.dart';
-import 'package:learn_flutter/core/logging/sanitize_log_dump.dart';
+import 'package:github_module/core/app_info.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/core/error/map_dio_exception.dart';
+import 'package:github_module/core/logging/log_dump.dart';
+import 'package:github_module/core/logging/sanitize_log_dump.dart';
 import 'package:talker/talker.dart';
 
 class HttpLogDump implements LogDump {

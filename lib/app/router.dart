@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_flutter/app/di.dart';
-import 'package:learn_flutter/app/log_console_provider.dart';
-import 'package:learn_flutter/app/log_viewer_page.dart';
-import 'package:learn_flutter/core/analytics/app_analytics.dart';
-import 'package:learn_flutter/features/auth/presentation/login_page.dart';
-import 'package:learn_flutter/features/auth/presentation/profile_page.dart';
-import 'package:learn_flutter/features/repos/presentation/app_shell.dart';
-import 'package:learn_flutter/features/repos/presentation/repo_list_page.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
-import 'package:learn_flutter/features/session/presentation/settings_page.dart';
+import 'package:github_module/app/di.dart';
+import 'package:github_module/app/log_console_provider.dart';
+import 'package:github_module/app/log_viewer_page.dart';
+import 'package:github_module/core/analytics/app_analytics.dart';
+import 'package:github_module/features/auth/presentation/login_page.dart';
+import 'package:github_module/features/auth/presentation/profile_page.dart';
+import 'package:github_module/features/repos/presentation/app_shell.dart';
+import 'package:github_module/features/repos/presentation/repo_list_page.dart';
+import 'package:github_module/features/session/presentation/session_provider.dart';
+import 'package:github_module/features/session/presentation/settings_page.dart';
 
 class _AuthRefresh extends ChangeNotifier {
   _AuthRefresh(Ref ref) {

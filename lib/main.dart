@@ -1,3 +1,3 @@
-import 'package:learn_flutter/app/bootstrap.dart';
+import 'package:github_module/app/bootstrap.dart';
 
 void main() => bootstrap();

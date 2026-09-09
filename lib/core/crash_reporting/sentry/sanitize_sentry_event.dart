@@ -1,4 +1,4 @@
-import 'package:learn_flutter/core/crash_reporting/crash_policy.dart';
+import 'package:github_module/core/crash_reporting/crash_policy.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 /// Last-chance map of [CrashPolicy] onto a Sentry event.

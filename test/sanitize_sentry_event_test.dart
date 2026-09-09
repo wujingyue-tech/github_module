@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learn_flutter/core/error/app_exception.dart';
-import 'package:learn_flutter/core/crash_reporting/sentry/sanitize_sentry_event.dart';
-import 'package:learn_flutter/core/request_cancel.dart';
+import 'package:github_module/core/error/app_exception.dart';
+import 'package:github_module/core/crash_reporting/sentry/sanitize_sentry_event.dart';
+import 'package:github_module/core/request_cancel.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() {

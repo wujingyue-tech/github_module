@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_flutter/features/auth/domain/user.dart';
-import 'package:learn_flutter/features/auth/presentation/auth_provider.dart';
-import 'package:learn_flutter/features/session/presentation/session_provider.dart';
-import 'package:learn_flutter/l10n/app_localizations.dart';
+import 'package:github_module/features/auth/domain/user.dart';
+import 'package:github_module/features/auth/presentation/auth_provider.dart';
+import 'package:github_module/features/session/presentation/session_provider.dart';
+import 'package:github_module/l10n/app_localizations.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
